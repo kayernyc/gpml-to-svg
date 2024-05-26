@@ -4,11 +4,22 @@
   "description": "convert gpml to svg from gplates",
   "main": "index.js",
   "scripts": {
+    "build": "npx tsc",
+    "lint": "eslint --config ./eslint.config.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^8.0.0",
+    "@types/node": "^20.12.12",
+    "eslint": "^8.0.0",
+    "globals": "^15.3.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.10.0"
   }
 }
