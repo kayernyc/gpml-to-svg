@@ -1,0 +1,2 @@
+const GPLATES_WIDTH = 1447
+const GPLATES_HEIGHT = 761
