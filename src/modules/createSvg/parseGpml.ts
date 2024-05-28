@@ -1,18 +1,11 @@
 import { promises as fs } from 'fs';
 import merc from 'mercator-projection';
-import { GPLATES_X_OFFSET, GPLATES_Y_OFFSET } from '../../GPLATES_CONSTANTS';
-import createSvg from './createSvg';
-
-type FeatureMember = {
-  [key: string]: object;
-};
+import errorProcessing from '../../utilities/errorProcessing';
 
 const CoordinatesRegex =
   /<gml:posList gml:dimension="2">(?<coordinatelist>\d[0-9.-\s]+)/gm;
 
-const testRegex = /(?<test>)gpml/g;
-
-async function parseGpml(sourcePath) {
+async function parseGpml(sourcePath: string): Promise<string> {
   try {
     const data = await fs.readFile(sourcePath, 'utf8');
 
@@ -23,6 +16,7 @@ async function parseGpml(sourcePath) {
     for (let result of results) {
       if (result[1]) {
         const coordinateData = result[1].trim().split(' ');
+
         const coordinates = coordinateData.reduce((acc, dataPoint, index) => {
           const dataFloat = parseFloat(dataPoint);
           if (!isNaN(dataFloat)) {
@@ -41,16 +35,16 @@ async function parseGpml(sourcePath) {
           return acc;
         }, '');
 
-        console.log({ coordinates });
-
         nodes += `${nodes}<polygon points="${coordinates.trim()}" style="fill:lime" />`;
       }
     }
 
-    createSvg(nodes);
+    return nodes;
   } catch (err) {
-    console.error(err);
+    errorProcessing(err);
   }
+
+  return '';
 }
 
 export default parseGpml;

@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import * as dotenv from 'dotenv';
 dotenv.config({ path: __dirname + '/../.env' });
 
-import parseGpml from './modules/createSvg/parseGpml';
+import createSvg from './modules/createSvg/createSvg';
 
 const program = new Command();
 program
@@ -18,7 +18,7 @@ program
 const options = program.opts();
 
 function convertFile(filepath: string, destination: string) {
-  parseGpml();
+  createSvg(filepath, destination);
 }
 
 console.log(process.env.DEST);

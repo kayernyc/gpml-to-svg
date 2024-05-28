@@ -5,8 +5,8 @@ import errorProcessing from '../../utilities/errorProcessing';
 const svgHeader = `<svg width="3600" height="1800" xmlns="http://www.w3.org/2000/svg">`;
 const svgFooter = '</svg>';
 
-async function writeSvg(sourcePath: string, destPath: string) {
-  const data = parseGpml(sourcePath);
+async function createSvg(sourcePath: string, destPath: string) {
+  const data: string = await parseGpml(sourcePath);
   const content = `${svgHeader}${data}${svgFooter}`;
   await fs
     .mkdir(destPath, { recursive: true })
@@ -20,4 +20,4 @@ async function writeSvg(sourcePath: string, destPath: string) {
   }
 }
 
-export default writeSvg;
+export default createSvg;
