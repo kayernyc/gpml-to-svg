@@ -21,11 +21,8 @@ function convertFile(filepath: string, destination: string) {
   createSvg(filepath, destination);
 }
 
-console.log(process.env.DEST);
-
 switch (true) {
   case !!options.convert:
-    console.log({ options });
     let filepath =
       typeof options.convert === 'string' ? options.convert : __dirname;
     let destination =
