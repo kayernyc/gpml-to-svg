@@ -1,4 +1,5 @@
 import { Command, OptionValues } from 'commander';
+import colorProcessing from './utilities/colorProcessing';
 
 import * as dotenv from 'dotenv';
 dotenv.config({ path: __dirname + '/../.env' });
@@ -17,11 +18,6 @@ program
   .command('convert <source>')
   .option('-c, --color <string>', 'fill color', 'teal')
   .action((source, options) => {
-    console.log({ source }, { options });
-    if (options.color) {
-      console.log(`Converting ${source} with color ${options.color}`);
-    }
-
     convertFile(source, options);
   });
 
@@ -36,5 +32,7 @@ function convertFile(filepath: string, options: OptionValues) {
       ? options.dest
       : process.env.DEST || __dirname;
 
-  createSvg(filepath, destination, options.color);
+  const color = colorProcessing(options.color.toLowerCase()) || 'black';
+
+  createSvg(filepath, destination, color);
 }
