@@ -53,7 +53,7 @@ function shortDistanceCrosses360(
   return lowPoint + 360 - highPoint < highPoint - lowPoint;
 }
 
-async function parseGpml(sourcePath: string): Promise<string> {
+async function parseGpml(sourcePath: string, color: string): Promise<string> {
   try {
     const data = await fs.readFile(sourcePath, 'utf8');
 
@@ -119,12 +119,12 @@ async function parseGpml(sourcePath: string): Promise<string> {
 
         let currentStr = `<polygon points="${currentPath
           .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
-          .join(' ')}" style="fill:lime" />`;
+          .join(' ')}" style="fill:${color}" />`;
 
         if (mostRecentPath) {
           currentStr += `<polygon points="${mostRecentPath
             .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
-            .join(' ')}" style="fill:lime" />`;
+            .join(' ')}" style="fill:${color}" />`;
         }
 
         nodes = `${nodes}${currentStr}`;
