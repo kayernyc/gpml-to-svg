@@ -11,9 +11,8 @@ export function processFileName(
   let destinationFileName = fileName(destinationPath) || fileName(sourcePath);
 
   if (destinationFileName) {
-    destinationFileName = destinationFileName.replace(' ', '-');
-    return `${pathUpToFileName}${destinationFileName}.svg`;
+    return `${pathUpToFileName}/${destinationFileName}`;
   }
 
-  throw new Error('No file name detected.');
+  throw new Error('No file name found');
 }

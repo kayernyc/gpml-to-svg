@@ -24,8 +24,6 @@ program
 
 program.parse(process.argv);
 
-// const options = program.opts();
-
 function convertFile(filepath: string, options: OptionValues) {
   console.log({ options });
 
