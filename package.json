@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "lint": "eslint --config ./eslint.config.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest --reporter=verbose"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "globals": "^15.3.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.10.0"
+    "typescript-eslint": "^7.10.0",
+    "vitest": "^1.6.0"
   }
 }
