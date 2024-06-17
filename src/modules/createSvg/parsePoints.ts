@@ -1,8 +1,7 @@
-import { promises as fs } from 'fs';
+import { Shape } from '../../types/shapeTypes';
 import errorProcessing from '../../utilities/errorProcessing';
 
-const CoordinatesRegex =
-  /<gml:posList gml:dimension="2">(?<coordinatelist>[0-9.\-\s]+)/gm;
+const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
 type ProcessedPoint = {
   lat: number;
@@ -53,10 +52,12 @@ function shortDistanceCrosses360(
   return lowPoint + 360 - highPoint < highPoint - lowPoint;
 }
 
-async function parseGpml(sourcePath: string, color: string): Promise<string> {
+async function parsePoints(
+  outlineObject: unknown,
+  color: string,
+): Promise<string> {
   try {
-    const data = await fs.readFile(sourcePath, 'utf8');
-
+    const data = JSON.stringify(outlineObject);
     const results = data.matchAll(CoordinatesRegex);
 
     let nodes = '';
@@ -139,4 +140,4 @@ async function parseGpml(sourcePath: string, color: string): Promise<string> {
   return '';
 }
 
-export default parseGpml;
+export default parsePoints;

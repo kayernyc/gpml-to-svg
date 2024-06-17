@@ -30,7 +30,6 @@ export function filterForTime(
     .flat()
     .filter((feature: FeatureCollection) => {
       const [beginTime, endTime] = findTimePeriod(feature.validTime.TimePeriod);
-
       return beginningTime >= beginTime;
     });
 

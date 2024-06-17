@@ -12,8 +12,6 @@ export async function parseToJson(
     const parser = new XMLParser();
     const parsedJson = parser.parse(data);
 
-    console.log({ parsedJson });
-
     if (parsedJson && parsedJson['FeatureCollection']) {
       const sourceJson = parsedJson['FeatureCollection'];
       if (Array.isArray(sourceJson.featureMember)) {
