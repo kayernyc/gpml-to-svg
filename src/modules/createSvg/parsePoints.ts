@@ -1,4 +1,4 @@
-import { Shape } from '../../types/shapeTypes';
+import { ShapeType, shapeTypes } from '../../types/shapeTypes';
 import errorProcessing from '../../utilities/errorProcessing';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
@@ -52,84 +52,131 @@ function shortDistanceCrosses360(
   return lowPoint + 360 - highPoint < highPoint - lowPoint;
 }
 
-async function parsePoints(
-  outlineObject: unknown,
-  color: string,
-): Promise<string> {
-  try {
-    const data = JSON.stringify(outlineObject);
-    const results = data.matchAll(CoordinatesRegex);
+function isFeatureValid(data: string): boolean | ShapeType {
+  let isValid: boolean | ShapeType = false;
+  shapeTypes.forEach((shapeType: string) => {
+    if (data.includes(shapeType)) {
+      isValid = shapeType as ShapeType;
+    }
+  });
+  return isValid;
+}
 
-    let nodes = '';
+function createPointsArray(result: RegExpExecArray): ProcessedPoint[][] {
+  const coordinateData = result[1].trim().split(' ');
 
-    for (let result of results) {
-      if (result[1]) {
-        const coordinateData = result[1].trim().split(' ');
+  let previousPoint: ProcessedPoint | undefined;
+  let mostRecentPath: ProcessedPoint[] = [];
+  let currentPath: ProcessedPoint[] = [];
 
-        let previousPoint: ProcessedPoint | undefined;
-        let mostRecentPath: ProcessedPoint[] = [];
-        let currentPath: ProcessedPoint[] = [];
+  coordinateData.forEach((dataPoint, index) => {
+    // only work with complete pairs
+    if (index % 2 === 1) {
+      const dataFloat = parseFloat(dataPoint);
+      if (isNaN(dataFloat)) {
+        console.warn({ dataFloat }, { dataPoint }, 'is NaN');
+      } else {
+        const sourceLat = 90 - parseFloat(coordinateData[index - 1]);
+        const sourceLong = dataFloat + 180;
 
-        coordinateData.forEach((dataPoint, index) => {
-          // only work with complete pairs
-          if (index % 2 === 1) {
-            const dataFloat = parseFloat(dataPoint);
-            if (isNaN(dataFloat)) {
-              console.warn({ dataFloat }, { dataPoint }, 'is NaN');
+        if (previousPoint) {
+          const { long: previousLong } = previousPoint;
+
+          if (shortDistanceCrosses360(previousLong, sourceLong)) {
+            const borderY = crossingPoint(previousPoint, {
+              lat: sourceLat,
+              long: sourceLong,
+            });
+
+            const previousBorderX = previousLong > 180 ? 360 : 0;
+            const currentBorderX = previousLong < 180 ? 360 : 0;
+
+            currentPath.push({ long: previousBorderX, lat: borderY });
+            const tempRecent = currentPath;
+            if (mostRecentPath) {
+              currentPath = mostRecentPath;
             } else {
-              const sourceLat = 90 - parseFloat(coordinateData[index - 1]);
-              const sourceLong = dataFloat + 180;
-
-              if (previousPoint) {
-                const { long: previousLong } = previousPoint;
-
-                if (shortDistanceCrosses360(previousLong, sourceLong)) {
-                  const borderY = crossingPoint(previousPoint, {
-                    lat: sourceLat,
-                    long: sourceLong,
-                  });
-
-                  const previousBorderX = previousLong > 180 ? 360 : 0;
-                  const currentBorderX = previousLong < 180 ? 360 : 0;
-
-                  currentPath.push({ long: previousBorderX, lat: borderY });
-                  const tempRecent = currentPath;
-                  if (mostRecentPath) {
-                    currentPath = mostRecentPath;
-                  } else {
-                    currentPath = [];
-                  }
-
-                  mostRecentPath = tempRecent;
-                  currentPath.push({ long: currentBorderX, lat: borderY });
-                  currentPath.push({ long: sourceLong, lat: sourceLat });
-                } else {
-                  currentPath.push({ long: sourceLong, lat: sourceLat });
-                }
-              }
-
-              previousPoint = {
-                long: sourceLong,
-                lat: sourceLat,
-              };
-
-              currentPath.push(previousPoint);
+              currentPath = [];
             }
+
+            mostRecentPath = tempRecent;
+            currentPath.push({ long: currentBorderX, lat: borderY });
+            currentPath.push({ long: sourceLong, lat: sourceLat });
+          } else {
+            currentPath.push({ long: sourceLong, lat: sourceLat });
           }
-        });
-
-        let currentStr = `<polygon points="${currentPath
-          .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
-          .join(' ')}" style="fill:${color}" />`;
-
-        if (mostRecentPath) {
-          currentStr += `<polygon points="${mostRecentPath
-            .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
-            .join(' ')}" style="fill:${color}" />`;
         }
 
-        nodes = `${nodes}${currentStr}`;
+        previousPoint = {
+          long: sourceLong,
+          lat: sourceLat,
+        };
+
+        currentPath.push(previousPoint);
       }
+    }
+  });
+
+  return mostRecentPath.length ? [currentPath, mostRecentPath] : [currentPath];
+}
+
+function createPoints(currentPointsArray: ProcessedPoint[], color: string) {
+  return currentPointsArray
+    .map(
+      (point: ProcessedPoint) =>
+        `<circle cx="${point.long}" cy="${point.lat}" r="5" style="fill:${color}" />`,
+    )
+    .join('');
+}
+
+function createLine(currentPointsArray: ProcessedPoint[], color: string) {
+  return `<polyline points="${currentPointsArray
+    .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
+    .join(' ')}" fill="none" style="stroke:${color}; stroke-width:2" />`;
+}
+
+function createShape(currentPointsArray: ProcessedPoint[], color: string) {
+  return `<polygon points="${currentPointsArray
+    .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
+    .join(' ')}" style="fill:${color}" />`;
+}
+
+function parsePoints(outlineObject: unknown, color: string): string {
+  try {
+    const data = JSON.stringify(outlineObject);
+    if (isFeatureValid(data) === false) {
+      return '';
+    }
+
+    const featureType: ShapeType = isFeatureValid(data) as ShapeType;
+    const results = data.matchAll(CoordinatesRegex);
+
+    if (!results) {
+      return '';
+    }
+
+    let nodes = '';
+    let currentStr = '';
+
+    for (let result of results) {
+      const currentPointArrays = createPointsArray(result);
+
+      if (featureType === 'LineString' || featureType === 'OrientableCurve') {
+        currentPointArrays.forEach((currentPointArray) => {
+          currentStr += createLine(currentPointArray, color);
+        });
+      } else if (featureType === 'MultiPoint' || featureType === 'Point') {
+        console.warn('Point and MultiPoint not implemented.');
+        // currentPointArrays.forEach((currentPointArray) => {
+        //   currentStr += createPoints(currentPointArray, color);
+        // });
+      } else {
+        currentPointArrays.forEach((currentPointArray) => {
+          currentStr += createShape(currentPointArray, color);
+        });
+      }
+
+      nodes = `${nodes}${currentStr}`;
     }
 
     return nodes;

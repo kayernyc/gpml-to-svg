@@ -16,7 +16,7 @@ function findTimePeriod(validTime: TimePeriod): [number, number] {
 
 export function filterForTime(
   sourceJsonArray: Record<string, unknown>[],
-  beginningTime: number,
+  time: number,
 ): FeatureCollection[] {
   const filteredFeatures = sourceJsonArray
     .map((feature) => {
@@ -30,7 +30,8 @@ export function filterForTime(
     .flat()
     .filter((feature: FeatureCollection) => {
       const [beginTime, endTime] = findTimePeriod(feature.validTime.TimePeriod);
-      return beginningTime >= beginTime;
+      // must have existed by the beginning time
+      return time <= beginTime && time >= endTime;
     });
 
   return filteredFeatures;
