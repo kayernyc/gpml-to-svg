@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { processFileName } from './processFileName';
+import { processDestinationFileName } from './processDestinationFileName';
 
 const testCases = [
   {
@@ -25,12 +25,12 @@ const testCases = [
 
 for (const { label, destination, source, expected } of testCases) {
   test(label, {}, () => {
-    expect(processFileName(destination, source)).toBe(expected);
+    expect(processDestinationFileName(destination, source)).toBe(expected);
   });
 }
 
 test('expect error when no file name found', {}, () => {
-  expect(() => processFileName('testfolder/', 'testfolder/')).toThrowError(
-    'No file name found',
-  );
+  expect(() =>
+    processDestinationFileName('testfolder/', 'testfolder/'),
+  ).toThrowError('No file name found');
 });
