@@ -8,8 +8,9 @@
     "outDir": "dist",
     "paths": {
       "@modules/*": ["modules/*"],
-      "@utilities/*": ["utilities/*"],
-      "@commands/*": ["commands/*"]
+      "@commands/*": ["commands/*"],
+      "@projectTypes/*": ["types/*"],
+      "@utilities/*": ["utilities/*"]
     },
     "rootDir": "src",
     "skipLibCheck": true,

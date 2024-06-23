@@ -1,4 +1,4 @@
-import { FeatureCollection, TimePeriod } from '../../types/timeTypes';
+import { FeatureCollection, TimePeriod } from '@projectTypes/timeTypes';
 
 function findTimePeriod(validTime: TimePeriod): [number, number] {
   const returnValue = [

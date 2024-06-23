@@ -1,5 +1,6 @@
-import { ShapeType, shapeTypes } from '../../types/shapeTypes';
-import errorProcessing from '../../utilities/errorProcessing';
+import { RotationDict } from '@projectTypes/rotationTypes';
+import { ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
+import errorProcessing from '@utilities/errorProcessing';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
@@ -141,7 +142,11 @@ function createShape(currentPointsArray: ProcessedPoint[], color: string) {
     .join(' ')}" style="fill:${color}" />`;
 }
 
-function parsePoints(outlineObject: unknown, color: string): string {
+function parsePoints(
+  outlineObject: unknown,
+  color: string,
+  rotationDict: RotationDict,
+): string {
   try {
     const data = JSON.stringify(outlineObject);
     if (isFeatureValid(data) === false) {
