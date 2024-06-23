@@ -1,6 +1,6 @@
 import { fileName } from './fileName';
 
-export function processFileName(
+export function processDestinationFileName(
   destinationPath: string,
   sourcePath: string,
 ): string {
