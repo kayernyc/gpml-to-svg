@@ -9,6 +9,7 @@ import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 import colorProcessing from '@utilities/colorProcessing';
 import { directoryPath } from '@utilities/directoryPath';
 import { findFile } from '@utilities/findFile';
+import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
 
 function findRotFile(sourcePath: string) {
   const rotPath = findFile(sourcePath, 'rotation.rot');
@@ -37,11 +38,16 @@ export async function convertFile(filepath: string, options: OptionValues) {
       featureArray = filterForTime(featureArray, parseInt(options.time));
     }
 
+    const rotationTimes = findRotationTimes(
+      rotationDict,
+      parseInt(options.time),
+    );
+    console.log(JSON.stringify(rotationTimes, null, 2));
+
     const svgFeatures = featureArray
-      ?.map((feature) => parsePoints(feature, color, rotationDict))
+      ?.map((feature) => parsePoints(feature, color, rotationTimes))
       .join('');
 
-    console.log({ svgFeatures });
     if (svgFeatures?.length) {
       createSvg(svgFeatures, destination, color);
     }
