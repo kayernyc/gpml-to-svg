@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import { XMLParser } from 'fast-xml-parser';
-import errorProcessing from '../../utilities/errorProcessing';
+import errorProcessing from '@utilities/errorProcessing';
 
 export async function parseToJson(
   sourcePath: string,

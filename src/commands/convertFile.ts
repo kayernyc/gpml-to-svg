@@ -4,9 +4,9 @@ import { parseToJson } from '@modules/findNodes/parseToJson';
 import createSvg from '@modules/createSvg/createSvg';
 import parsePoints from '@modules/createSvg/parsePoints';
 import { filterForTime } from '@modules/findNodes/filterForTime';
+import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 
 import colorProcessing from '@utilities/colorProcessing';
-import { processDestinationFileName } from '@utilities/processDestinationFileName';
 import { directoryPath } from '@utilities/directoryPath';
 import { findFile } from '@utilities/findFile';
 
@@ -23,6 +23,7 @@ export async function convertFile(filepath: string, options: OptionValues) {
   const color = colorProcessing(options.color.toLowerCase()) || 'black';
   const sourceDirectoryPath = directoryPath(filepath);
   const rotationFilePath = findRotFile(sourceDirectoryPath);
+  const rotationDict = parseRotationFile(rotationFilePath);
 
   let destination =
     typeof options.dest === 'string'
@@ -37,7 +38,7 @@ export async function convertFile(filepath: string, options: OptionValues) {
     }
 
     const svgFeatures = featureArray
-      ?.map((feature) => parsePoints(feature, color))
+      ?.map((feature) => parsePoints(feature, color, rotationDict))
       .join('');
 
     console.log({ svgFeatures });
