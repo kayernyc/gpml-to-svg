@@ -1,10 +1,12 @@
+export type RotationNode = {
+  lat_of_euler_pole: number;
+  lon_of_euler_pole: number;
+  rotation_angle: number;
+  relativePlateId: number;
+};
+
 export type RotationRecord = {
-  [key: number]: {
-    x: number;
-    y: number;
-    rotation: number;
-    relativePlateId: number;
-  };
+  [key: number]: RotationNode;
 };
 
 export type RotationDict = {
