@@ -1,10 +1,11 @@
 import { promises as fs } from 'fs';
 import { XMLParser } from 'fast-xml-parser';
 import errorProcessing from '@utilities/errorProcessing';
+import { FeatureCollection } from '@projectTypes/timeTypes';
 
 export async function parseToJson(
   sourcePath: string,
-): Promise<Array<Record<string, unknown>> | undefined> {
+): Promise<Array<FeatureCollection> | undefined> {
   try {
     let data = await fs.readFile(sourcePath, 'utf8');
     data = data.replace(/gml:/g, '');

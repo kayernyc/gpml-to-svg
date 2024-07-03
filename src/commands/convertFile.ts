@@ -10,6 +10,8 @@ import colorProcessing from '@utilities/colorProcessing';
 import { directoryPath } from '@utilities/directoryPath';
 import { findFile } from '@utilities/findFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
+import { FeatureCollection } from '@projectTypes/timeTypes';
+import { RotationDict } from '@projectTypes/rotationTypes';
 
 function findRotFile(sourcePath: string) {
   const rotPath = findFile(sourcePath, 'rotation.rot');
@@ -18,6 +20,15 @@ function findRotFile(sourcePath: string) {
   }
 
   return rotPath;
+}
+
+function featureAndRotationFactory(rotationTimes: RotationDict, color: string) {
+  return function (feature: FeatureCollection) {
+    const plateId = feature.reconstructionPlateId.ConstantValue.value;
+    const rotationNode = rotationTimes[plateId];
+
+    return parsePoints(feature, color, rotationNode);
+  };
 }
 
 export async function convertFile(filepath: string, options: OptionValues) {
@@ -32,11 +43,16 @@ export async function convertFile(filepath: string, options: OptionValues) {
       : process.env.DEST || __dirname;
 
   if (destination && filepath) {
-    let featureArray = await parseToJson(filepath);
+    let featureArray: FeatureCollection[] | undefined =
+      await parseToJson(filepath);
 
-    if (featureArray?.length) {
-      featureArray = filterForTime(featureArray, parseInt(options.time));
+    if (!featureArray) {
+      throw new Error('No features found in file');
     }
+
+    featureArray = filterForTime(featureArray, parseInt(options.time));
+
+    console.log(JSON.stringify(featureArray[0], undefined, 2));
 
     const rotationTimes = findRotationTimes(
       rotationDict,
@@ -44,8 +60,12 @@ export async function convertFile(filepath: string, options: OptionValues) {
     );
     console.log(JSON.stringify(rotationTimes, null, 2));
 
+    const parsePointsWithRotation = featureAndRotationFactory(
+      rotationTimes,
+      color,
+    );
     const svgFeatures = featureArray
-      ?.map((feature) => parsePoints(feature, color, rotationTimes))
+      ?.map((feature) => parsePointsWithRotation(feature))
       .join('');
 
     if (svgFeatures?.length) {
