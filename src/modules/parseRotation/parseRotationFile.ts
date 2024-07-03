@@ -7,12 +7,26 @@ export function parseRotationFile(filepath: string) {
   const accDict: RotationDict = {};
 
   const rotationDict: RotationDict = rotationFileArray.reduce((acc, line) => {
-    const [plateId, time, x, y, rotation, relativePlateId] = line
+    const [
+      plateId,
+      time,
+      lat_of_euler_pole,
+      lon_of_euler_pole,
+      rotation_angle,
+      relativePlateId,
+    ] = line
       .slice(0, line.indexOf('!'))
       .split(' ')
       .filter((el) => el !== '');
 
-    if (!plateId || !time || !x || !y || !rotation || !relativePlateId) {
+    if (
+      !plateId ||
+      !time ||
+      !lat_of_euler_pole ||
+      !lon_of_euler_pole ||
+      !rotation_angle ||
+      !relativePlateId
+    ) {
       return acc;
     }
 
@@ -21,9 +35,9 @@ export function parseRotationFile(filepath: string) {
     }
 
     acc[plateId][parseInt(time)] = {
-      x: parseFloat(x),
-      y: parseFloat(y),
-      rotation: parseFloat(rotation),
+      lat_of_euler_pole: parseFloat(lat_of_euler_pole),
+      lon_of_euler_pole: parseFloat(lon_of_euler_pole),
+      rotation_angle: parseFloat(rotation_angle),
       relativePlateId: parseInt(relativePlateId),
     };
 
