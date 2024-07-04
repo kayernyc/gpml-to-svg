@@ -11,7 +11,7 @@ import { directoryPath } from '@utilities/directoryPath';
 import { findFile } from '@utilities/findFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
 import { FeatureCollection } from '@projectTypes/timeTypes';
-import { RotationDict } from '@projectTypes/rotationTypes';
+import { RotationDict, RotationNode } from '@projectTypes/rotationTypes';
 
 function findRotFile(sourcePath: string) {
   const rotPath = findFile(sourcePath, 'rotation.rot');
@@ -25,7 +25,7 @@ function findRotFile(sourcePath: string) {
 function featureAndRotationFactory(rotationTimes: RotationDict, color: string) {
   return function (feature: FeatureCollection) {
     const plateId = feature.reconstructionPlateId.ConstantValue.value;
-    const rotationNode = rotationTimes[plateId];
+    const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
 
     return parsePoints(feature, color, rotationNode);
   };
@@ -52,13 +52,11 @@ export async function convertFile(filepath: string, options: OptionValues) {
 
     featureArray = filterForTime(featureArray, parseInt(options.time));
 
-    console.log(JSON.stringify(featureArray[0], undefined, 2));
-
     const rotationTimes = findRotationTimes(
       rotationDict,
       parseInt(options.time),
     );
-    console.log(JSON.stringify(rotationTimes, null, 2));
+    // console.log(JSON.stringify(rotationTimes, null, 2));
 
     const parsePointsWithRotation = featureAndRotationFactory(
       rotationTimes,

@@ -1,6 +1,7 @@
-import { RotationDict } from '@projectTypes/rotationTypes';
+import { RotationDict, RotationNode } from '@projectTypes/rotationTypes';
 import { ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
 import errorProcessing from '@utilities/errorProcessing';
+import { transformLatLongBetweenPoles } from '@modules/applyRotation/transformCoordinates';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
@@ -8,6 +9,12 @@ type ProcessedPoint = {
   lat: number;
   long: number;
 };
+
+type PointProcessingFunction = (
+  currentPointsArray: ProcessedPoint[],
+  color: string,
+  rotationDict: RotationDict,
+) => string;
 
 function crossingPoint(
   previousPoint: ProcessedPoint,
@@ -63,7 +70,10 @@ function isFeatureValid(data: string): boolean | ShapeType {
   return isValid;
 }
 
-function createPointsArray(result: RegExpExecArray): ProcessedPoint[][] {
+function createPointsArray(
+  result: RegExpExecArray,
+  rotationNode: RotationNode,
+): ProcessedPoint[][] {
   const coordinateData = result[1].trim().split(' ');
 
   let previousPoint: ProcessedPoint | undefined;
@@ -77,8 +87,18 @@ function createPointsArray(result: RegExpExecArray): ProcessedPoint[][] {
       if (isNaN(dataFloat)) {
         console.warn({ dataFloat }, { dataPoint }, 'is NaN');
       } else {
-        const sourceLat = 90 - parseFloat(coordinateData[index - 1]);
-        const sourceLong = dataFloat + 180;
+        const { lat_of_euler_pole, lon_of_euler_pole, rotation_angle } =
+          rotationNode;
+        const incomingLat = parseFloat(coordinateData[index - 1]);
+
+        const transformedPair = transformLatLongBetweenPoles(
+          incomingLat,
+          dataFloat,
+          { lat_of_euler_pole, lon_of_euler_pole, rotation_angle },
+        );
+
+        const sourceLat = 90 - transformedPair[0];
+        const sourceLong = transformedPair[1] + 180;
 
         if (previousPoint) {
           const { long: previousLong } = previousPoint;
@@ -145,7 +165,7 @@ function createShape(currentPointsArray: ProcessedPoint[], color: string) {
 function parsePoints(
   outlineObject: unknown,
   color: string,
-  rotationDict: RotationDict,
+  rotationNode: RotationNode,
 ): string {
   try {
     const data = JSON.stringify(outlineObject);
@@ -164,7 +184,7 @@ function parsePoints(
     let currentStr = '';
 
     for (let result of results) {
-      const currentPointArrays = createPointsArray(result);
+      const currentPointArrays = createPointsArray(result, rotationNode);
 
       if (featureType === 'LineString' || featureType === 'OrientableCurve') {
         currentPointArrays.forEach((currentPointArray) => {

@@ -85,3 +85,18 @@ export function transformPointBetweenPoles(
   const result = qTransform.mul(qPoint).mul(qConjugate);
   return [result.x, result.y, result.z];
 }
+
+export function transformLatLongBetweenPoles(
+  lat: number,
+  long: number,
+  newPole: EulerPole,
+  oldPole: EulerPole = {
+    lat_of_euler_pole: 90,
+    lon_of_euler_pole: 0,
+    rotation_angle: 0,
+  },
+): [number, number] {
+  const cartesian = latLonToCartesian(lat, long);
+  const transformed = transformPointBetweenPoles(cartesian, oldPole, newPole);
+  return cartesianToLatLong(...transformed);
+}
