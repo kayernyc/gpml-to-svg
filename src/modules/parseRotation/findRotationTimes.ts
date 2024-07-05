@@ -56,13 +56,8 @@ export function findRelativeTimeRotationParams(
   const relativeTime = (time - earlyTime) / (lateTime - earlyTime);
   const relativeRotation = {
     lat_of_euler_pole: earlyLat + (lateLat - earlyLat) * relativeTime,
-    lon_of_euler_pole:
-      earlyRecord.lon_of_euler_pole +
-      (lateRecord.lon_of_euler_pole - earlyRecord.lon_of_euler_pole) *
-        relativeTime,
-    rotation_angle:
-      earlyRecord.rotation_angle +
-      (lateRecord.rotation_angle - earlyRecord.rotation_angle) * relativeTime,
+    lon_of_euler_pole: earlyLon + (lateLon - earlyLon) * relativeTime,
+    rotation_angle: earlyRot + (lateRot - earlyRot) * relativeTime,
     relativePlateId: earlyRecord.relativePlateId,
   };
 
@@ -99,3 +94,14 @@ export function findRotationTimes(rotationDict: RotationDict, time: number) {
   }, {} as RotationDict);
   return times;
 }
+
+/*
+
+test case
+
+300 600.0  -34.4489   65.8376  -51.2807  000 !
+300 1000.0   90.0    0.0    0.0  000 ! Shapes
+
+300 900.1  -35.4532   63.8624  -12.9164  000 !
+
+*/
