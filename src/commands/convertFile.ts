@@ -12,6 +12,7 @@ import { findFile } from '@utilities/findFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
 import { FeatureCollection } from '@projectTypes/timeTypes';
 import { RotationDict, RotationNode } from '@projectTypes/rotationTypes';
+import { multiplyDegreeEulerRotations } from '@modules/applyRotation/transformCoordinates';
 
 function findRotFile(sourcePath: string) {
   const rotPath = findFile(sourcePath, 'rotation.rot');
@@ -26,6 +27,25 @@ function featureAndRotationFactory(rotationTimes: RotationDict, color: string) {
   return function (feature: FeatureCollection) {
     const plateId = feature.reconstructionPlateId.ConstantValue.value;
     const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
+
+    if (rotationNode.relativePlateId !== 0) {
+      const baseNode = rotationTimes[
+        rotationNode.relativePlateId
+      ] as RotationNode;
+      const root = {
+        lat_of_euler_pole: 90,
+        lon_of_euler_pole: 0,
+        rotation_angle: 0,
+        relativePlateId: 0,
+      };
+
+      const finalPole = multiplyDegreeEulerRotations(rotationNode, baseNode);
+
+      return parsePoints(feature, color, {
+        ...finalPole,
+        relativePlateId: plateId,
+      });
+    }
 
     return parsePoints(feature, color, rotationNode);
   };
@@ -50,6 +70,7 @@ export async function convertFile(filepath: string, options: OptionValues) {
       throw new Error('No features found in file');
     }
 
+    // Finds all features that are valid at the given time
     featureArray = filterForTime(featureArray, parseInt(options.time));
 
     const rotationTimes = findRotationTimes(
@@ -62,6 +83,7 @@ export async function convertFile(filepath: string, options: OptionValues) {
       rotationTimes,
       color,
     );
+
     const svgFeatures = featureArray
       ?.map((feature) => parsePointsWithRotation(feature))
       .join('');

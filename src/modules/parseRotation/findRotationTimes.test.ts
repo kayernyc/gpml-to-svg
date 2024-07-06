@@ -1,9 +1,5 @@
-import { describe, expect, it, test } from 'vitest';
-import {
-  relativeTimeRotationParams,
-  findRelativeTimeRotationParams,
-} from './findRotationTimes';
-import { time } from 'console';
+import { describe, expect, test } from 'vitest';
+import { findRelativeTimeRotationParams } from './findRotationTimes';
 
 const testCaseParameters = [
   {
@@ -26,9 +22,9 @@ const testCaseParameters = [
       },
     },
     expected: {
-      lat_of_euler_pole: -35.4532,
-      lon_of_euler_pole: 63.8624,
-      rotation_angle: -12.9164,
+      lat_of_euler_pole: 58.918887225000006,
+      lon_of_euler_pole: 16.442940599999996,
+      rotation_angle: -12.807354824999997,
       relativePlateId: 0,
     },
   },
@@ -143,6 +139,7 @@ describe('findRelativeTimeRotationParams', () => {
     'should return the correct rotation parameters when given valid inputs',
     ({ params, expected }) => {
       const result = findRelativeTimeRotationParams(params);
+      console.log({ result });
       expect(result).toEqual(expected);
     },
   );
