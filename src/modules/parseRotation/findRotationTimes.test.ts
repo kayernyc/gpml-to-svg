@@ -139,7 +139,6 @@ describe('findRelativeTimeRotationParams', () => {
     'should return the correct rotation parameters when given valid inputs',
     ({ params, expected }) => {
       const result = findRelativeTimeRotationParams(params);
-      console.log({ result });
       expect(result).toEqual(expected);
     },
   );

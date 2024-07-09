@@ -4,10 +4,6 @@ import {
   findFinalRotation,
 } from './featureAndRotationFactory';
 import { RotationNode } from '@projectTypes/rotationTypes';
-import {
-  cartesianToLatLong,
-  latLonToCartesian,
-} from '@modules/applyRotation/transformCoordinates';
 
 const rotationTimes = {
   100: {
@@ -78,32 +74,44 @@ describe('findFinalRotation', () => {
     };
 
     const finalTransformQuat = findFinalRotation(rotationNode, rotationTimes);
-
     expect(finalTransformQuat).toEqual(expectedTransformQuat);
   });
 
   it('should return a correct transformation for one dependency', () => {
     const rotationNode = {
       lat_of_euler_pole: 50.5931,
-      lon_of_euler_pole: -154.4447,
+      lon_of_euler_pole: -154.445,
       rotation_angle: -89.8022,
       relativePlateId: 300,
     };
 
     const expectedRotation = {
-      w: 0.3650496924828389,
-      x: 0.7003362532173151,
-      y: 0.2730925486182557,
-      z: -0.5492616082859818,
+      w: 0.8940632033005891,
+      x: 0.3912582721676063,
+      y: -0.03704653060455519,
+      z: -0.21493140192739402,
     };
 
     const finalRotation = findFinalRotation(rotationNode, rotationTimes);
+    expect(finalRotation).toEqual(expectedRotation);
+  });
 
-    const point = latLonToCartesian(0, 0);
-    const qConjugate = finalRotation.conjugate();
-    const result = finalRotation.mul(point).mul(qConjugate);
-    console.log(cartesianToLatLong(result.x, result.y, result.z));
+  it('should return a correct transformation for two dependencies', () => {
+    const rotationNode = {
+      lat_of_euler_pole: -23.4654,
+      lon_of_euler_pole: 44.8734,
+      rotation_angle: 206.4252,
+      relativePlateId: 350,
+    };
 
+    const expectedRotation = {
+      w: -0.5119385557807475,
+      x: 0.6261647365199006,
+      y: 0.5874353599969298,
+      z: -0.02750155758068773,
+    };
+
+    const finalRotation = findFinalRotation(rotationNode, rotationTimes);
     expect(finalRotation).toEqual(expectedRotation);
   });
 });

@@ -1,18 +1,10 @@
-import { RotationNode } from '@projectTypes/rotationTypes';
 import { ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
 import errorProcessing from '@utilities/errorProcessing';
 import {
   cartesianToLatLong,
   latLonToCartesian,
-  transformLatLongBetweenPoles,
 } from '@modules/applyRotation/transformCoordinates';
 import Quaternion from 'quaternion';
-
-interface EulerPole {
-  lat_of_euler_pole: number;
-  lon_of_euler_pole: number;
-  rotation_angle: number; // in degrees
-}
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 

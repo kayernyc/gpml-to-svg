@@ -2,7 +2,6 @@ import { OptionValues } from 'commander';
 
 import { parseToJson } from '@modules/findNodes/parseToJson';
 import createSvg from '@modules/createSvg/createSvg';
-import parsePoints from '@modules/createSvg/parsePoints';
 import { filterForTime } from '@modules/findNodes/filterForTime';
 import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 
@@ -11,8 +10,6 @@ import { directoryPath } from '@utilities/directoryPath';
 import { findFile } from '@utilities/findFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
 import { FeatureCollection } from '@projectTypes/timeTypes';
-import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import { multiplyDegreeEulerRotations } from '@modules/applyRotation/transformCoordinates';
 import { featureAndRotationFactory } from '@modules/featureAndRotation/featureAndRotationFactory';
 
 function findRotFile(sourcePath: string) {
@@ -50,7 +47,6 @@ export async function convertFile(filepath: string, options: OptionValues) {
       rotationDict,
       parseInt(options.time),
     );
-    // console.log(JSON.stringify(rotationTimes, null, 2));
 
     const parsePointsWithRotation = featureAndRotationFactory(
       rotationTimes,

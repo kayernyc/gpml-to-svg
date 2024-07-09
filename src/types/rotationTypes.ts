@@ -12,3 +12,9 @@ export type RotationRecord = {
 export type RotationDict = {
   [key: string]: RotationRecord;
 };
+
+export interface EulerPole {
+  lat_of_euler_pole: number;
+  lon_of_euler_pole: number;
+  rotation_angle: number; // in degrees
+}

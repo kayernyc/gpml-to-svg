@@ -1,5 +1,5 @@
 export type EulerParamType = [number, number, number];
-import { RotationNode } from '@projectTypes/rotationTypes';
+import { EulerPole } from '@projectTypes/rotationTypes';
 import Quaternion from 'quaternion';
 
 /*  Written with the help of ChatGPT, assuming this
@@ -41,12 +41,6 @@ export function cartesianToLatLong(
   const longitude = Math.atan2(y, x) * (180 / Math.PI);
 
   return [latitude, longitude];
-}
-
-interface EulerPole {
-  lat_of_euler_pole: number;
-  lon_of_euler_pole: number;
-  rotation_angle: number; // in degrees
 }
 
 export function eulerToQuaternion(euler: EulerPole): Quaternion {
@@ -127,50 +121,4 @@ export function transformPointBetweenPoles(
 
   const result = qTransform.mul(qPoint).mul(qConjugate);
   return [result.x, result.y, result.z];
-}
-
-export function transformLatLongBetweenPoles(
-  lat: number,
-  long: number,
-  newPole: EulerPole,
-  oldPole: EulerPole = {
-    lat_of_euler_pole: 90,
-    lon_of_euler_pole: 0,
-    rotation_angle: 0,
-  },
-): [number, number] {
-  const cartesian = latLonToCartesian(lat, long);
-  const transformed = transformPointBetweenPoles(cartesian, oldPole, newPole);
-  return cartesianToLatLong(...transformed);
-}
-
-function multiplyQuaternions(q1: Quaternion, q2: Quaternion): Quaternion {
-  return new Quaternion(
-    q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z,
-    q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y,
-    q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x,
-    q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w,
-  );
-}
-
-export function transformBetweenPoles(
-  oldPole: EulerPole,
-  newPole: EulerPole,
-): Quaternion {
-  const qInitial = eulerToQuaternion(oldPole);
-  const qNew = eulerToQuaternion(newPole);
-  const qTransform = qNew.mul(qInitial);
-
-  return qTransform;
-}
-
-export function multiplyDegreeEulerRotations(
-  oldPole: EulerPole,
-  newPole: EulerPole,
-): EulerPole {
-  const qInitial = eulerToQuaternion(oldPole);
-  const qNew = eulerToQuaternion(newPole);
-  const qTransform = qNew.mul(qInitial);
-
-  return quaternionToEulerPole(qTransform);
 }

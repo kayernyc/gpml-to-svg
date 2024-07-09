@@ -25,13 +25,12 @@ export function findAllRotations(
 export function findFinalRotation(
   rotationNode: RotationNode,
   rotationArray: RotationRecord,
-): Quaternion {
-  const root = {
+  root = {
     lat_of_euler_pole: 90,
     lon_of_euler_pole: 0,
     rotation_angle: 0,
-  };
-
+  },
+): Quaternion {
   const allRotations = findAllRotations(rotationNode, rotationArray);
 
   let currentBase: Quaternion | undefined;
@@ -44,8 +43,6 @@ export function findFinalRotation(
       rotation_angle,
     });
 
-    console.log({ currentQuat });
-
     if (!currentBase) {
       currentBase = currentQuat;
     } else {
@@ -56,8 +53,6 @@ export function findFinalRotation(
   if (!currentBase) {
     throw new Error('No rotations found');
   }
-
-  console.log({ currentBase });
 
   const rootQuat = eulerToQuaternion(root);
   const qTransform = currentBase.mul(rootQuat.conjugate());
