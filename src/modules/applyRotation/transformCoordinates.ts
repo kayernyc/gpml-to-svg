@@ -1,4 +1,5 @@
 export type EulerParamType = [number, number, number];
+import { EulerPole } from '@projectTypes/rotationTypes';
 import Quaternion from 'quaternion';
 
 /*  Written with the help of ChatGPT, assuming this
@@ -42,13 +43,7 @@ export function cartesianToLatLong(
   return [latitude, longitude];
 }
 
-interface EulerPole {
-  lat_of_euler_pole: number;
-  lon_of_euler_pole: number;
-  rotation_angle: number; // in degrees
-}
-
-function eulerToQuaternion(euler: EulerPole): Quaternion {
+export function eulerToQuaternion(euler: EulerPole): Quaternion {
   const { lat_of_euler_pole, lon_of_euler_pole, rotation_angle } = euler;
 
   const latRad = degreesToRadians(lat_of_euler_pole);
@@ -70,14 +65,56 @@ function eulerToQuaternion(euler: EulerPole): Quaternion {
   );
 }
 
+export function quaternionToEulerPole(quaternion: Quaternion): EulerPole {
+  const { w, x, y, z } = quaternion;
+
+  // Calculate the rotation angle
+  const angleRad = 2 * Math.acos(w);
+  const angleDeg = radiansToDegrees(angleRad);
+
+  // Calculate the rotation axis
+  const sinHalfAngle = Math.sqrt(1 - w * w);
+  let axisX = x / sinHalfAngle;
+  let axisY = y / sinHalfAngle;
+  let axisZ = z / sinHalfAngle;
+
+  if (sinHalfAngle < 1e-6) {
+    axisX = x;
+    axisY = y;
+    axisZ = z;
+  }
+
+  // Normalize the axis
+  const magnitude = Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ);
+  axisX /= magnitude;
+  axisY /= magnitude;
+  axisZ /= magnitude;
+
+  // Convert the rotation axis to latitude and longitude
+  const latRad = Math.asin(axisZ);
+  const lonRad = Math.atan2(axisY, axisX);
+
+  const latDeg = radiansToDegrees(latRad);
+  const lonDeg = radiansToDegrees(lonRad);
+
+  return {
+    lat_of_euler_pole: latDeg,
+    lon_of_euler_pole: lonDeg,
+    rotation_angle: angleDeg,
+  };
+}
+
 export function transformPointBetweenPoles(
   point: [number, number, number],
-  initialPole: EulerPole,
+  oldPole: EulerPole,
   newPole: EulerPole,
 ): [number, number, number] {
-  const qInitial = eulerToQuaternion(initialPole);
+  const qInitial = eulerToQuaternion(oldPole);
   const qNew = eulerToQuaternion(newPole);
+  // const testQ = qNew.mul(qInitial);
   const qTransform = qNew.mul(qInitial.conjugate());
+
+  // const eulerArray = qTransform.toEuler();
 
   const qPoint = new Quaternion(0, ...point);
   const qConjugate = qTransform.conjugate();

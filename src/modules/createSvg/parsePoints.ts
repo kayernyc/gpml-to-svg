@@ -1,6 +1,10 @@
-import { RotationDict } from '@projectTypes/rotationTypes';
 import { ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
 import errorProcessing from '@utilities/errorProcessing';
+import {
+  cartesianToLatLong,
+  latLonToCartesian,
+} from '@modules/applyRotation/transformCoordinates';
+import Quaternion from 'quaternion';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
@@ -63,7 +67,10 @@ function isFeatureValid(data: string): boolean | ShapeType {
   return isValid;
 }
 
-function createPointsArray(result: RegExpExecArray): ProcessedPoint[][] {
+function createPointsArray(
+  result: RegExpExecArray,
+  finalRotation: Quaternion,
+): ProcessedPoint[][] {
   const coordinateData = result[1].trim().split(' ');
 
   let previousPoint: ProcessedPoint | undefined;
@@ -73,12 +80,23 @@ function createPointsArray(result: RegExpExecArray): ProcessedPoint[][] {
   coordinateData.forEach((dataPoint, index) => {
     // only work with complete pairs
     if (index % 2 === 1) {
-      const dataFloat = parseFloat(dataPoint);
-      if (isNaN(dataFloat)) {
-        console.warn({ dataFloat }, { dataPoint }, 'is NaN');
+      const incomingLon = parseFloat(dataPoint);
+      if (isNaN(incomingLon)) {
+        console.warn({ dataFloat: incomingLon }, { dataPoint }, 'is NaN');
       } else {
-        const sourceLat = 90 - parseFloat(coordinateData[index - 1]);
-        const sourceLong = dataFloat + 180;
+        const incomingLat = parseFloat(coordinateData[index - 1]);
+        const point = latLonToCartesian(incomingLat, incomingLon);
+
+        const qConjugate = finalRotation.conjugate();
+        const result = finalRotation.mul(point).mul(qConjugate);
+        let [sourceLat, sourceLong] = cartesianToLatLong(
+          result.x,
+          result.y,
+          result.z,
+        );
+
+        sourceLat = 90 - sourceLat;
+        sourceLong = sourceLong + 180;
 
         if (previousPoint) {
           const { long: previousLong } = previousPoint;
@@ -145,7 +163,7 @@ function createShape(currentPointsArray: ProcessedPoint[], color: string) {
 function parsePoints(
   outlineObject: unknown,
   color: string,
-  rotationDict: RotationDict,
+  finalRotation: Quaternion,
 ): string {
   try {
     const data = JSON.stringify(outlineObject);
@@ -164,7 +182,7 @@ function parsePoints(
     let currentStr = '';
 
     for (let result of results) {
-      const currentPointArrays = createPointsArray(result);
+      const currentPointArrays = createPointsArray(result, finalRotation);
 
       if (featureType === 'LineString' || featureType === 'OrientableCurve') {
         currentPointArrays.forEach((currentPointArray) => {

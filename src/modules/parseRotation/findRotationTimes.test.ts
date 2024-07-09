@@ -1,11 +1,33 @@
-import { describe, expect, it, test } from 'vitest';
-import {
-  relativeTimeRotationParams,
-  findRelativeTimeRotationParams,
-} from './findRotationTimes';
-import { time } from 'console';
+import { describe, expect, test } from 'vitest';
+import { findRelativeTimeRotationParams } from './findRotationTimes';
 
 const testCaseParameters = [
+  {
+    name: 'from gplates example',
+    params: {
+      time: 900.1,
+      earlyTime: 1000,
+      lateTime: 600,
+      earlyRecord: {
+        lat_of_euler_pole: 90,
+        lon_of_euler_pole: 0,
+        rotation_angle: 0,
+        relativePlateId: 0,
+      },
+      lateRecord: {
+        lat_of_euler_pole: -34.4489,
+        lon_of_euler_pole: 65.8376,
+        rotation_angle: -51.2807,
+        relativePlateId: 0,
+      },
+    },
+    expected: {
+      lat_of_euler_pole: 58.918887225000006,
+      lon_of_euler_pole: 16.442940599999996,
+      rotation_angle: -12.807354824999997,
+      relativePlateId: 0,
+    },
+  },
   {
     name: 'where early time is 5, late time is 15, and time is 10',
     params: {

@@ -56,13 +56,8 @@ export function findRelativeTimeRotationParams(
   const relativeTime = (time - earlyTime) / (lateTime - earlyTime);
   const relativeRotation = {
     lat_of_euler_pole: earlyLat + (lateLat - earlyLat) * relativeTime,
-    lon_of_euler_pole:
-      earlyRecord.lon_of_euler_pole +
-      (lateRecord.lon_of_euler_pole - earlyRecord.lon_of_euler_pole) *
-        relativeTime,
-    rotation_angle:
-      earlyRecord.rotation_angle +
-      (lateRecord.rotation_angle - earlyRecord.rotation_angle) * relativeTime,
+    lon_of_euler_pole: earlyLon + (lateLon - earlyLon) * relativeTime,
+    rotation_angle: earlyRot + (lateRot - earlyRot) * relativeTime,
     relativePlateId: earlyRecord.relativePlateId,
   };
 
@@ -71,17 +66,23 @@ export function findRelativeTimeRotationParams(
 
 export function findRotationTimes(rotationDict: RotationDict, time: number) {
   const times = Object.keys(rotationDict).reduce((acc, plateId) => {
+    const plateIdInt = parseInt(plateId, 10);
     const plateObject: RotationRecord = rotationDict[plateId];
 
     if (Object.keys(plateObject).length < 2) {
       throw new Error('Rotation record must have at least two time points');
     }
 
-    acc[plateId] = {};
+    acc[plateIdInt] = {
+      lat_of_euler_pole: 0,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+      relativePlateId: 0,
+    };
 
     // If the time is in the rotation record, return the record
     if (plateObject[time]) {
-      acc[plateId] = plateObject[time];
+      acc[plateIdInt] = plateObject[time];
       return acc;
     }
 
@@ -94,8 +95,8 @@ export function findRotationTimes(rotationDict: RotationDict, time: number) {
       lateRecord: plateObject[time2],
     });
 
-    acc[plateId] = relativeRotation;
+    acc[plateIdInt] = relativeRotation;
     return acc;
-  }, {} as RotationDict);
+  }, {} as RotationRecord);
   return times;
 }

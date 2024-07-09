@@ -15,7 +15,11 @@ export type FeatureCollection = {
     TimePeriod: TimePeriod;
   };
   geometryImportTime: TimeInstant;
-  reconstructionPlateId: {};
+  reconstructionPlateId: {
+    ConstantValue: {
+      value: number;
+    };
+  };
   outlineOf: {};
   featureType: string;
 };

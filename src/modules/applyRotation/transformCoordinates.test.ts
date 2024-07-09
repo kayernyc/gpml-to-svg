@@ -1,8 +1,11 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, it, test } from 'vitest';
+import Quaternion from 'quaternion';
 
 import {
-  latLonToCartesian,
+  eulerToQuaternion,
+  quaternionToEulerPole,
   cartesianToLatLong,
+  latLonToCartesian,
   transformPointBetweenPoles,
 } from './transformCoordinates';
 
@@ -110,36 +113,21 @@ describe('cartesianToLatLong', () => {
 });
 
 const transformPointBetweenPolesCases = [
-  // {
-  //   name: 'where point [1, 0, 0] is transformed from initial pole to new pole',
-  //   point: [1, 0, 0],
-  //   initialPole: {
-  //     lat_of_euler_pole: 30,
-  //     lon_of_euler_pole: 60,
-  //     rotation_angle: 20,
-  //   },
-  //   newPole: {
-  //     lat_of_euler_pole: 45,
-  //     lon_of_euler_pole: 45,
-  //     rotation_angle: 30,
-  //   },
-  //   expected: [0.7392, 0.5732, 0.3536],
-  // },
-  // {
-  //   name: 'where point [0, 1, 0] is transformed from initial pole to new pole',
-  //   point: [0, 1, 0],
-  //   initialPole: {
-  //     lat_of_euler_pole: 30,
-  //     lon_of_euler_pole: 60,
-  //     rotation_angle: 20,
-  //   },
-  //   newPole: {
-  //     lat_of_euler_pole: 45,
-  //     lon_of_euler_pole: 45,
-  //     rotation_angle: 30,
-  //   },
-  //   expected: [0.2803, 0.7392, 0.6124],
-  // },
+  {
+    name: 'using gplates real case',
+    point: [1, 0, 0],
+    initialPole: {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+    },
+    newPole: {
+      lat_of_euler_pole: -34.4489,
+      lon_of_euler_pole: 65.8376,
+      rotation_angle: -51.2807,
+    },
+    expected: [0.6681732808036102, 0.5364546671230196, 0.5155199869472283],
+  },
   {
     name: 'where point [1, 0, 0] is transformed from initial pole to new pole',
     point: [1, 0, 0],
@@ -171,7 +159,7 @@ const transformPointBetweenPolesCases = [
     expected: [0.9251766765758391, 0.23016134445423478, -0.30178448044772743],
   },
   {
-    name: 'using test planet',
+    name: 'using no rotation',
     point: [1, 0, 0],
     initialPole: {
       lat_of_euler_pole: 90,
@@ -211,10 +199,124 @@ describe('transformPointBetweenPoles', () => {
         initialPole,
         newPole,
       );
+      console.log(cartesianToLatLong(result[0], result[1], result[2]));
 
       expect(result[0]).toBeCloseTo(expected[0], 3);
       expect(result[1]).toBeCloseTo(expected[1], 3);
       expect(result[2]).toBeCloseTo(expected[2], 3);
     },
   );
+});
+
+const quaternionToEulerPoleCases = [
+  {
+    name: 'where quaternion [0, 0, 0, 1] generates euler pole [0, 0, 90]',
+    quaternion: { w: 0, x: 0, y: 0, z: 1 },
+    expected: {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 180,
+    },
+  },
+  {
+    name: 'where quaternion [0.5, 0.5, 0.5, 0.5] generates euler pole [0, 0, 45]',
+    quaternion: { w: 0.5, x: 0.5, y: 0.5, z: 0.5 },
+    expected: {
+      lat_of_euler_pole: 35.264,
+      lon_of_euler_pole: 45,
+      rotation_angle: 120,
+    },
+  },
+  {
+    name: 'where quaternion [0.866, 0, 0, 0.5] generates euler pole [0, 0, 30]',
+    quaternion: { w: 0.866, x: 0, y: 0, z: 0.5 },
+    expected: {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 60.00582186237605,
+    },
+  },
+  {
+    name: 'where quaternion [0.707, 0, 0, 0.707] generates euler pole [90, 0 90]',
+    quaternion: { w: 0.707, x: 0, y: 0, z: 0.707 },
+    expected: {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 90.0173,
+    },
+  },
+  {
+    name: 'where quaternion [0, 0.707, 0, 0.707] generates euler pole [0, 90, 45]',
+    quaternion: { w: 0, x: 0.707, y: 0, z: 0.707 },
+    expected: {
+      lat_of_euler_pole: 45,
+      lon_of_euler_pole: 0,
+      rotation_angle: 180,
+    },
+  },
+];
+
+describe('quaternionToEulerPole', () => {
+  test.each(quaternionToEulerPoleCases)('$name', ({ quaternion, expected }) => {
+    const result = quaternionToEulerPole(quaternion as Quaternion);
+
+    expect(result.lat_of_euler_pole).toBeCloseTo(expected.lat_of_euler_pole, 3);
+    expect(result.lon_of_euler_pole).toBeCloseTo(expected.lon_of_euler_pole, 3);
+    expect(result.rotation_angle).toBeCloseTo(expected.rotation_angle, 3);
+  });
+});
+
+const eulerToQuaternionCases = [
+  {
+    name: 'where euler pole [0, 0, 90] generates quaternion [0, 0, 0, 1]',
+    euler: { lat_of_euler_pole: 90, lon_of_euler_pole: 0, rotation_angle: 180 },
+    expected: { w: 0, x: 0, y: 0, z: 1 },
+  },
+  {
+    name: 'where euler pole [0, 0, 45] generates quaternion [0.5, 0.5, 0.5, 0.5]',
+    euler: {
+      lat_of_euler_pole: 35.264,
+      lon_of_euler_pole: 45,
+      rotation_angle: 120,
+    },
+    expected: { w: 0.5, x: 0.5, y: 0.5, z: 0.5 },
+  },
+  {
+    name: 'where euler pole [0, 0, 30] generates quaternion [0.866, 0, 0, 0.5]',
+    euler: {
+      lat_of_euler_pole: 89.23993017780637,
+      lon_of_euler_pole: 0,
+      rotation_angle: 60.00582186237605,
+    },
+    expected: { w: 0.866, x: 0.0066, y: 0, z: 0.5 },
+  },
+  {
+    name: 'where euler pole [0, 0, 45] generates quaternion [0.707, 0, 0, 0.707]',
+    euler: {
+      lat_of_euler_pole: 88.5919462011935,
+      lon_of_euler_pole: 0,
+      rotation_angle: 90.017303325676,
+    },
+    expected: { w: 0.707, x: 0.0173, y: 0, z: 0.707 },
+  },
+  {
+    name: 'where euler pole [0, 90, 45] generates quaternion [0, 0.707, 0, 0.707]',
+    euler: {
+      lat_of_euler_pole: 44.991348337,
+      lon_of_euler_pole: 0,
+      rotation_angle: 180,
+    },
+    expected: { w: 0, x: 0.707, y: 0, z: 0.707 },
+  },
+];
+
+describe('eulerToQuaternion', () => {
+  test.each(eulerToQuaternionCases)('$name', ({ name, euler, expected }) => {
+    const result = eulerToQuaternion(euler);
+    console.log({ name }, { result });
+    expect(result.w).toBeCloseTo(expected.w, 3);
+    expect(result.x).toBeCloseTo(expected.x, 3);
+    expect(result.y).toBeCloseTo(expected.y, 3);
+    expect(result.z).toBeCloseTo(expected.z, 3);
+  });
 });

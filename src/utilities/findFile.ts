@@ -23,14 +23,3 @@ export function findFile(filePath: string, fileName: string): string | null {
 
   return null;
 }
-
-// Usage example
-// const filePath = '/path/to/directory';
-// const fileName = 'example.txt';
-// const foundPath = findFile(filePath, fileName);
-
-// if (foundPath) {
-//   console.log(`Found file at: ${foundPath}`);
-// } else {
-//   console.log(`File '${fileName}' not found in '${filePath}' or its subdirectories.`);
-// }
