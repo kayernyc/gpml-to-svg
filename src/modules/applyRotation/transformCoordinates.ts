@@ -117,10 +117,10 @@ export function transformPointBetweenPoles(
 ): [number, number, number] {
   const qInitial = eulerToQuaternion(oldPole);
   const qNew = eulerToQuaternion(newPole);
-  const testQ = qNew.mul(qInitial);
+  // const testQ = qNew.mul(qInitial);
   const qTransform = qNew.mul(qInitial.conjugate());
 
-  const eulerArray = qTransform.toEuler();
+  // const eulerArray = qTransform.toEuler();
 
   const qPoint = new Quaternion(0, ...point);
   const qConjugate = qTransform.conjugate();

@@ -1,7 +1,18 @@
 import { RotationNode } from '@projectTypes/rotationTypes';
 import { ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
 import errorProcessing from '@utilities/errorProcessing';
-import { transformLatLongBetweenPoles } from '@modules/applyRotation/transformCoordinates';
+import {
+  cartesianToLatLong,
+  latLonToCartesian,
+  transformLatLongBetweenPoles,
+} from '@modules/applyRotation/transformCoordinates';
+import Quaternion from 'quaternion';
+
+interface EulerPole {
+  lat_of_euler_pole: number;
+  lon_of_euler_pole: number;
+  rotation_angle: number; // in degrees
+}
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
@@ -66,13 +77,7 @@ function isFeatureValid(data: string): boolean | ShapeType {
 
 function createPointsArray(
   result: RegExpExecArray,
-  rotationNode: RotationNode,
-  baseNode: RotationNode = {
-    lat_of_euler_pole: 90,
-    lon_of_euler_pole: 0,
-    rotation_angle: 0,
-    relativePlateId: 0,
-  },
+  finalRotation: Quaternion,
 ): ProcessedPoint[][] {
   const coordinateData = result[1].trim().split(' ');
 
@@ -87,18 +92,19 @@ function createPointsArray(
       if (isNaN(incomingLon)) {
         console.warn({ dataFloat: incomingLon }, { dataPoint }, 'is NaN');
       } else {
-        const { lat_of_euler_pole, lon_of_euler_pole, rotation_angle } =
-          rotationNode;
         const incomingLat = parseFloat(coordinateData[index - 1]);
+        const point = latLonToCartesian(incomingLat, incomingLon);
 
-        const transformedPair = transformLatLongBetweenPoles(
-          incomingLat,
-          incomingLon,
-          { lat_of_euler_pole, lon_of_euler_pole, rotation_angle },
+        const qConjugate = finalRotation.conjugate();
+        const result = finalRotation.mul(point).mul(qConjugate);
+        let [sourceLat, sourceLong] = cartesianToLatLong(
+          result.x,
+          result.y,
+          result.z,
         );
 
-        const sourceLat = 90 - transformedPair[0];
-        const sourceLong = transformedPair[1] + 180;
+        sourceLat = 90 - sourceLat;
+        sourceLong = sourceLong + 180;
 
         if (previousPoint) {
           const { long: previousLong } = previousPoint;
@@ -165,8 +171,7 @@ function createShape(currentPointsArray: ProcessedPoint[], color: string) {
 function parsePoints(
   outlineObject: unknown,
   color: string,
-  rotationNode: RotationNode,
-  baseNode?: RotationNode,
+  finalRotation: Quaternion,
 ): string {
   try {
     const data = JSON.stringify(outlineObject);
@@ -185,11 +190,7 @@ function parsePoints(
     let currentStr = '';
 
     for (let result of results) {
-      const currentPointArrays = createPointsArray(
-        result,
-        rotationNode,
-        baseNode,
-      );
+      const currentPointArrays = createPointsArray(result, finalRotation);
 
       if (featureType === 'LineString' || featureType === 'OrientableCurve') {
         currentPointArrays.forEach((currentPointArray) => {

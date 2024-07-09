@@ -416,7 +416,55 @@ describe('transformBetweenPoles', () => {
     });
   });
 
+  it('processes plateID 300 at 600 my', () => {
+    const base = {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+    };
+    const thirdPole = {
+      lat_of_euler_pole: -34.4489,
+      lon_of_euler_pole: 65.8376,
+      rotation_angle: -51.2807,
+    };
+    const firstResult = transformBetweenPoles(base, thirdPole);
+    console.log(quaternionToEulerPole(firstResult));
+
+    const angle = 2 * Math.acos(firstResult.w);
+    console.log({ angle });
+
+    expect(firstResult).toEqual({
+      w: 0.9015280105759967,
+      x: -0.14606124245908153,
+      y: -0.3255722590077852,
+      z: 0.2447775801881427,
+    });
+  });
+
+  it('processes plateID 400 at 600 my', () => {
+    const base = {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+    };
+    const thirdPole = {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 50,
+    };
+    const firstResult = transformBetweenPoles(base, thirdPole);
+    console.log(quaternionToEulerPole(firstResult));
+
+    expect(firstResult).toEqual({
+      w: 0.9063077870366499,
+      x: 2.5877905075098294e-17,
+      y: 0,
+      z: 0.42261826174069944,
+    });
+  });
+
   it('processes two different rotations', () => {
+    // 350 -> 300 -> 0
     const secondPole = {
       lat_of_euler_pole: -34.4489,
       lon_of_euler_pole: 65.8376,
@@ -427,14 +475,162 @@ describe('transformBetweenPoles', () => {
       lon_of_euler_pole: -154.445,
       rotation_angle: -89.8022,
     };
-    const firstResult = transformBetweenPoles(thirdPole, secondPole);
+    const firstResult = transformBetweenPoles(secondPole, thirdPole);
     console.log(quaternionToEulerPole(firstResult));
+
+    const angle = 2 * Math.acos(firstResult.w);
+    console.log({ angle });
 
     expect(firstResult).toEqual({
       w: 0.8940632033005891,
-      x: 0.3912582721676063,
-      y: -0.03704653060455519,
-      z: -0.21493140192739402,
+      x: 0.13075310559609227,
+      y: -0.07563544611933094,
+      z: -0.42170356077604665,
     });
+  });
+});
+
+describe('multiplyQuaternions manually', () => {
+  it('multiplies simple things', () => {
+    // use 300 at 600 my
+    const point = latLonToCartesian(0, 0);
+    const root = {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+    };
+    const firstPole = {
+      lat_of_euler_pole: -34.4489,
+      lon_of_euler_pole: 65.8376,
+      rotation_angle: -51.2807,
+    };
+
+    const qPoint = new Quaternion(0, ...point);
+
+    const rootQuat = eulerToQuaternion(root);
+    const qNew = eulerToQuaternion(firstPole);
+    const qTransform = qNew.mul(rootQuat.conjugate());
+    console.log({ qTransform });
+
+    //---
+    const qConjugate = qTransform.conjugate();
+    const result = qTransform.mul(qPoint).mul(qConjugate);
+    console.log(cartesianToLatLong(result.x, result.y, result.z));
+  });
+
+  it('multiplies two things', () => {
+    // use 350 at 600 my
+    const point = latLonToCartesian(4.3191, 14.9992);
+    const root = {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+    };
+
+    const firstPole = {
+      lat_of_euler_pole: -34.4489,
+      lon_of_euler_pole: 65.8376,
+      rotation_angle: -51.2807,
+    };
+
+    const secondPole = {
+      lat_of_euler_pole: 50.5931,
+      lon_of_euler_pole: -154.445,
+      rotation_angle: -89.8022,
+    };
+
+    const qPoint = new Quaternion(0, ...point);
+    const baseQuat = eulerToQuaternion(root);
+
+    const qInitial = eulerToQuaternion(firstPole);
+    const qNew = eulerToQuaternion(secondPole);
+    const intermediateQuat = qInitial.mul(qNew);
+
+    const qTransform = intermediateQuat.mul(baseQuat.conjugate());
+    const qConjugate = qTransform.conjugate();
+    const result = qTransform.mul(qPoint).mul(qConjugate);
+    console.log(cartesianToLatLong(result.x, result.y, result.z));
+  });
+
+  it('multiplies three things', () => {
+    // use 370 at 600 my
+    const point = latLonToCartesian(-19.6762, 58.5797);
+    const root = {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+    };
+
+    const firstPole = {
+      lat_of_euler_pole: -34.4489,
+      lon_of_euler_pole: 65.8376,
+      rotation_angle: -51.2807,
+    };
+
+    const secondPole = {
+      lat_of_euler_pole: 50.5931,
+      lon_of_euler_pole: -154.445,
+      rotation_angle: -89.8022,
+    };
+
+    const thirdPole = {
+      lat_of_euler_pole: -23.4654,
+      lon_of_euler_pole: 44.8734,
+      rotation_angle: 206.4252,
+    };
+
+    const qOne = eulerToQuaternion(firstPole);
+    const qTwo = eulerToQuaternion(secondPole);
+    const qThree = eulerToQuaternion(thirdPole);
+    const baseQuat = eulerToQuaternion(root);
+
+    const intermediateQuat1 = qTwo.mul(qThree);
+    const intermediateQuat2 = qOne.mul(intermediateQuat1);
+
+    const qTransform = intermediateQuat2.mul(baseQuat);
+
+    const qConjugate = qTransform.conjugate();
+    const result = qTransform.mul(point).mul(qConjugate);
+    console.log(cartesianToLatLong(result.x, result.y, result.z));
+  });
+
+  it('multiplies three different things', () => {
+    // use 370 at 600 my
+    const point = latLonToCartesian(-30.1393, 60.0494);
+    const root = {
+      lat_of_euler_pole: 90,
+      lon_of_euler_pole: 0,
+      rotation_angle: 0,
+    };
+
+    const firstPole = {
+      lat_of_euler_pole: -34.4489,
+      lon_of_euler_pole: 65.8376,
+      rotation_angle: -51.2807,
+    };
+
+    const secondPole = {
+      lat_of_euler_pole: 50.5931,
+      lon_of_euler_pole: -154.445,
+      rotation_angle: -89.8022,
+    };
+
+    const thirdPole = {
+      lat_of_euler_pole: -23.4654,
+      lon_of_euler_pole: 44.8734,
+      rotation_angle: 206.4252,
+    };
+
+    const qOne = eulerToQuaternion(firstPole);
+    const qTwo = eulerToQuaternion(secondPole);
+    const qThree = eulerToQuaternion(thirdPole);
+    const baseQuat = eulerToQuaternion(root);
+
+    const intermediateQuat1 = qTwo.mul(qThree);
+    const intermediateQuat2 = qOne.mul(intermediateQuat1);
+    const qTransform = intermediateQuat2.mul(baseQuat);
+    const qConjugate = qTransform.conjugate();
+    const result = qTransform.mul(point).mul(qConjugate);
+    console.log(cartesianToLatLong(result.x, result.y, result.z));
   });
 });
