@@ -1,12 +1,13 @@
 import fs from 'fs';
 import { RotationDict } from '@projectTypes/rotationTypes';
 
-export function parseRotationFile(filepath: string) {
-  const rotationFile = fs.readFileSync(filepath, 'utf8');
-  const rotationFileArray = rotationFile.split('\n');
+export function reduceFileArray(rotationFileArray: string[]) {
   const accDict: RotationDict = {};
+  return rotationFileArray.reduce((acc, line) => {
+    if (!line.length) {
+      return acc;
+    }
 
-  const rotationDict: RotationDict = rotationFileArray.reduce((acc, line) => {
     const [
       plateId,
       time,
@@ -34,7 +35,7 @@ export function parseRotationFile(filepath: string) {
       acc[plateId] = {};
     }
 
-    acc[plateId][parseInt(time)] = {
+    acc[plateId][parseFloat(time)] = {
       lat_of_euler_pole: parseFloat(lat_of_euler_pole),
       lon_of_euler_pole: parseFloat(lon_of_euler_pole),
       rotation_angle: parseFloat(rotation_angle),
@@ -43,6 +44,10 @@ export function parseRotationFile(filepath: string) {
 
     return acc;
   }, accDict);
+}
 
-  return rotationDict;
+export function parseRotationFile(filepath: string) {
+  const rotationFile = fs.readFileSync(filepath, 'utf8');
+  const rotationFileArray = rotationFile.split('\n');
+  return reduceFileArray(rotationFileArray);
 }

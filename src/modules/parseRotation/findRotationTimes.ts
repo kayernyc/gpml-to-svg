@@ -5,7 +5,7 @@ import {
 } from '@projectTypes/rotationTypes';
 
 function findTimePair(plateObject: RotationRecord, time: number) {
-  const times = Object.keys(plateObject).map((key) => parseInt(key, 10));
+  const times = Object.keys(plateObject).map((key) => parseFloat(key));
   const sortedTimes = times.sort((a, b) => a - b);
 
   for (let i = 0; i < sortedTimes.length; i++) {
@@ -39,7 +39,8 @@ export function findRelativeTimeRotationParams(
 
   if (earlyRecord.relativePlateId !== lateRecord.relativePlateId) {
     // TODO: improve error message for non-technical users
-    throw new Error('Relative plate ID must be the same for both records');
+    const message = `Relative plate ID must be the same for both records. Early record ${earlyRecord.relativePlateId}, late record ${lateRecord.relativePlateId}`;
+    throw new Error(message);
   }
 
   const {
