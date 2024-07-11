@@ -1,6 +1,6 @@
 import path from 'path';
 import { GPLATES_GPML_FILE_EXT } from 'GPLATES_CONSTANTS';
-import { lstatSync } from 'fs';
+import { lstatSync, readdirSync } from 'fs';
 
 export const isDirectory = (path: string) => {
   try {
@@ -20,11 +20,22 @@ export const isFile = (path: string) => {
 
 export function findValidFiles(filepaths: string[]): string[] | undefined {
   const { files, directories } = filepaths.reduce(
-    (acc, path) => {
-      if (isDirectory(path)) {
-        acc.directories.push(path);
-      } else if (isFile(path)) {
-        acc.files.push(path);
+    (acc, proposedPath) => {
+      if (isDirectory(proposedPath)) {
+        acc.directories.push(proposedPath);
+        // traverse directory and add all files to files array
+        const allFilesInDir = readdirSync(proposedPath);
+        allFilesInDir.forEach((dirFilepath) => {
+          if (path.extname(dirFilepath) === GPLATES_GPML_FILE_EXT) {
+            const fullPath = path.join(proposedPath, dirFilepath);
+            acc.files.push(fullPath);
+          }
+        });
+      } else if (
+        isFile(proposedPath) &&
+        path.extname(proposedPath) === GPLATES_GPML_FILE_EXT
+      ) {
+        acc.files.push(proposedPath);
       }
 
       return acc;
@@ -37,19 +48,15 @@ export function findValidFiles(filepaths: string[]): string[] | undefined {
   }
 
   if (directories.length) {
-    console.log('convert directories');
+    console.log('converted directories', { directories });
 
-    // add all valid files to files array
+    // messaging to human
   }
 
   if (files.length) {
-    console.log('convert files');
-
-    const validFiles = files.filter((filename) => {
-      console.log(path.extname(filename));
-      return path.extname(filename) === GPLATES_GPML_FILE_EXT;
-    });
-    return validFiles;
+    console.log('files to convert');
+    const filesSet = Array.from(new Set(files));
+    return filesSet;
   }
 
   return;
