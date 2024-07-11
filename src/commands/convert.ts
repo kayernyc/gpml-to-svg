@@ -1,9 +1,9 @@
+import { findValidFiles } from '@modules/validFiles/findValidFiles';
 import { OptionValues } from 'commander';
-import { lstatSync } from 'node:fs';
 
-export const isDirectory = (path: string) =>
-  lstatSync(path) ? lstatSync(path).isDirectory() : false;
+export async function convert(filepaths: string[], options: OptionValues) {
+  console.log('convert!', { filepaths }, Array.isArray(filepaths));
+  const validFiles = findValidFiles(filepaths);
 
-export async function convert(filepath: string[], options: OptionValues) {
-  console.log('convert!', { filepath }, Array.isArray(filepath));
+  console.log({ validFiles });
 }

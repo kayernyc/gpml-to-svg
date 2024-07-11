@@ -21,9 +21,9 @@ program
     'point in time that a feature must exist',
   )
   .option('-c, --color <string>', 'fill color', 'teal')
-  .argument('<source...>')
-  .action(async (source, options) => {
-    convert(source, options);
+  .argument('<filepaths...>')
+  .action(async (filepaths, options) => {
+    convert(filepaths, options);
   });
 
 program.parse(process.argv);
