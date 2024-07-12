@@ -1,64 +1,40 @@
-import { OptionValues } from 'commander';
-
 import { parseToJson } from '@modules/findNodes/parseToJson';
 import createSvg from '@modules/createSvg/createSvg';
 import { filterForTime } from '@modules/findNodes/filterForTime';
-import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 
-import colorProcessing from '@utilities/colorProcessing';
 import { directoryPath } from '@utilities/directoryPath';
-import { findFile } from '@utilities/findFile';
-import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
 import { FeatureCollection } from '@projectTypes/timeTypes';
 import { featureAndRotationFactory } from '@modules/featureAndRotation/featureAndRotationFactory';
+import { RotationRecord } from '@projectTypes/rotationTypes';
 
-function findRotFile(sourcePath: string) {
-  const rotPath = findFile(sourcePath, 'rotation.rot');
-  if (!rotPath) {
-    throw new Error('No rotation.rot file found');
+export async function convertFile(
+  filepath: string,
+  rotationTimes: RotationRecord,
+  color: string,
+  time: number,
+): Promise<string | undefined> {
+  let featureArray: FeatureCollection[] | undefined =
+    await parseToJson(filepath);
+
+  if (!featureArray) {
+    throw new Error('No features found in file');
   }
 
-  return rotPath;
-}
+  // Finds all features that are valid at the given time
+  featureArray = filterForTime(featureArray, time);
 
-export async function convertFile(filepath: string, options: OptionValues) {
-  const color = colorProcessing(options.color.toLowerCase()) || 'black';
-  const sourceDirectoryPath = directoryPath(filepath);
-  const rotationFilePath = findRotFile(sourceDirectoryPath);
-  const rotationDict = parseRotationFile(rotationFilePath);
+  const parsePointsWithRotation = featureAndRotationFactory(
+    rotationTimes,
+    color,
+  );
 
-  let destination =
-    typeof options.dest === 'string'
-      ? options.dest
-      : process.env.DEST || __dirname;
+  const svgFeatures = featureArray
+    ?.map((feature) => parsePointsWithRotation(feature))
+    .join('');
 
-  if (destination && filepath) {
-    let featureArray: FeatureCollection[] | undefined =
-      await parseToJson(filepath);
-
-    if (!featureArray) {
-      throw new Error('No features found in file');
-    }
-
-    // Finds all features that are valid at the given time
-    featureArray = filterForTime(featureArray, parseInt(options.time));
-
-    const rotationTimes = findRotationTimes(
-      rotationDict,
-      parseInt(options.time),
-    );
-
-    const parsePointsWithRotation = featureAndRotationFactory(
-      rotationTimes,
-      color,
-    );
-
-    const svgFeatures = featureArray
-      ?.map((feature) => parsePointsWithRotation(feature))
-      .join('');
-
-    if (svgFeatures?.length) {
-      createSvg(svgFeatures, destination, color);
-    }
+  if (svgFeatures?.length) {
+    return `<g>${svgFeatures}</g>`;
   }
+
+  return;
 }

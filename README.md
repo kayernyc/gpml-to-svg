@@ -25,6 +25,8 @@ where  `<FULL PATH>` is the complete path to the target file,
 
 and `<TIME>` is the moment in the model when all the shapes you want converted exist.
 
+`<ROTATION FILE>` is an optional parameter if you want to specify a rotation file in a different location than any of the directories you list. Otherwise the CLI will look for a rotation file near files you have added as parameters.
+
 `node dist/index.js convert -c "<COLOR>" -t <TIME> <FULL PATH>`
 
 ### Example:
