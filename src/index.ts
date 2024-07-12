@@ -21,6 +21,7 @@ program
     'point in time that a feature must exist',
   )
   .option('-c, --color <string>', 'fill color', 'teal')
+  .option('-r, --rotation-file <string>', 'path to the rotation file')
   .argument('<filepaths...>')
   .action(async (filepaths, options) => {
     convert(filepaths, options);

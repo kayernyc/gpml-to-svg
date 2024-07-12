@@ -34,11 +34,13 @@ COLOR: `teal` or `008080` or `#008080`
 
 TIME: 900
 
+ROTATION FILE: `/Users/imauser/folderName/shared.rot`
+
 `node dist/index.js convert -c "008080" -t 900 /Users/imauser/folderName/Big\ continents:dinosaur\ friendly.gpml`
 
 You can convert multiple files into one SVG.
 
-`node dist/index.js convert -c "008080" -t 900 /Users/imauser/folderName/Big\ continents:dinosaur\ friendly.gpml /Users/imauser/folderName/Big\ continents:terror\  bird.gpml`
+`node dist/index.js convert -c "008080" -t 900 -r /Users/imauser/folderName/shared.rot /Users/imauser/folderName/Big\ continents:dinosaur\ friendly.gpml /Users/imauser/folderName/Big\ continents:terror\  bird.gpml`
 
 -----------
 I don't have a PC, so if anyone is willing to test this on a PC, I would appreciate the collaboration.
