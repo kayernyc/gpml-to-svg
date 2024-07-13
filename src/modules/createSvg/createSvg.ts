@@ -4,12 +4,7 @@ import errorProcessing from '@utilities/errorProcessing';
 const svgHeader = `<svg width="360" height="180" xmlns="http://www.w3.org/2000/svg">`;
 const svgFooter = '</svg>';
 
-async function createSvg(
-  featureString: string,
-  destPath: string,
-  color?: string,
-) {
-  color = color || '#000000';
+async function createSvg(featureString: string, destPath: string) {
   const content = `${svgHeader}${featureString}${svgFooter}`;
   await fs
     .mkdir(destPath, { recursive: true })

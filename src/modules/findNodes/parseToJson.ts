@@ -20,7 +20,9 @@ export async function parseToJson(
       }
     }
 
-    throw new Error('No FeatureCollection found');
+    // throw new Error(`No FeatureCollection found in ${sourcePath}`);
+    console.warn(`No FeatureCollection found in ${sourcePath}`);
+    return;
   } catch (err: unknown) {
     errorProcessing(err);
   }
