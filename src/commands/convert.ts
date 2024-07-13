@@ -5,7 +5,15 @@ import colorProcessing from '@utilities/colorProcessing';
 import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile';
 import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
-import { convertFile } from './convertFile';
+import { convertFileToGroup } from '../modules/convertFileToGroup.ts/convertFileToGroup';
+
+const isRejected = (
+  input: PromiseSettledResult<unknown>,
+): input is PromiseRejectedResult => input.status === 'rejected';
+
+const isFulfilled = <T>(
+  input: PromiseSettledResult<T>,
+): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 
 export async function convert(filepaths: string[], options: OptionValues) {
   // process options
@@ -28,9 +36,18 @@ export async function convert(filepaths: string[], options: OptionValues) {
 
   const processedFiles = await Promise.allSettled(
     files.map(async (filePath) => {
-      return convertFile(filePath, rotationTimes, color, timeInt);
+      return convertFileToGroup(filePath, rotationTimes, color, timeInt);
     }),
   );
 
-  console.log(processedFiles);
+  let finalElements: string = processedFiles
+    .filter(isFulfilled)
+    .map((record) => record.value)
+    .filter(
+      (record): record is Exclude<typeof record, undefined> =>
+        record !== undefined,
+    )
+    .join('\n');
+
+  console.log({ finalElements });
 }

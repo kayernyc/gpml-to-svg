@@ -7,7 +7,7 @@ import { FeatureCollection } from '@projectTypes/timeTypes';
 import { featureAndRotationFactory } from '@modules/featureAndRotation/featureAndRotationFactory';
 import { RotationRecord } from '@projectTypes/rotationTypes';
 
-export async function convertFile(
+export async function convertFileToGroup(
   filepath: string,
   rotationTimes: RotationRecord,
   color: string,

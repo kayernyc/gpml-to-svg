@@ -64,14 +64,20 @@ export function featureAndRotationFactory(
   color: string,
 ) {
   return function (feature: FeatureCollection) {
-    const plateId = feature.reconstructionPlateId.ConstantValue.value;
+    const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
     const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
 
-    const finalRotation: Quaternion = findFinalRotation(
-      rotationNode,
-      rotationTimes,
-    );
+    if (plateId) {
+      try {
+        const finalRotation: Quaternion = findFinalRotation(
+          rotationNode,
+          rotationTimes,
+        );
 
-    return parsePoints(feature, color, finalRotation);
+        return parsePoints(feature, color, finalRotation);
+      } catch (e) {
+        console.log(e, feature.reconstructionPlateId);
+      }
+    }
   };
 }
