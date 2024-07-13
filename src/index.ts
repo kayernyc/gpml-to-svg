@@ -20,6 +20,7 @@ program
     '-t, --time <number>',
     'point in time that a feature must exist',
   )
+  .requiredOption('-d, --destination <string>', 'where to save the svg')
   .option('-c, --color <string>', 'fill color', 'teal')
   .option('-r, --rotation-file <string>', 'path to the rotation file')
   .argument('<filepaths...>')

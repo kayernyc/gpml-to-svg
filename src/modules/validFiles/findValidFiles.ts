@@ -57,11 +57,10 @@ export function findValidFiles(
   if (directories.length) {
     console.log('converted directories', { directories });
 
-    // messaging to human
+    // TODO: messaging to humans
   }
 
   if (files.length) {
-    console.log('files to convert');
     const filesSet = Array.from(new Set(files));
     const rotationSet = Array.from(new Set(rotations));
     return {

@@ -6,10 +6,8 @@ import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile
 import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
 import { convertFileToGroup } from '../modules/convertFileToGroup.ts/convertFileToGroup';
-
-const isRejected = (
-  input: PromiseSettledResult<unknown>,
-): input is PromiseRejectedResult => input.status === 'rejected';
+import { validDestination } from '@modules/validDestination/validDestination';
+import createSvg from '@modules/createSvg/createSvg';
 
 const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
@@ -17,6 +15,11 @@ const isFulfilled = <T>(
 
 export async function convert(filepaths: string[], options: OptionValues) {
   // process options
+  const { destination } = options;
+  if (!validDestination(destination)) {
+    return 1;
+  }
+
   const color = colorProcessing(options.color.toLowerCase()) || 'black';
   const validFiles = findValidFiles(filepaths);
   const timeInt = parseInt(options.time);
@@ -49,5 +52,5 @@ export async function convert(filepaths: string[], options: OptionValues) {
     )
     .join('\n');
 
-  console.log({ finalElements });
+  createSvg(finalElements, destination);
 }
