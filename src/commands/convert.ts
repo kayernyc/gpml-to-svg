@@ -8,6 +8,7 @@ import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
 import { convertFileToGroup } from '../modules/convertFileToGroup.ts/convertFileToGroup';
 import { validDestination } from '@modules/validDestination/validDestination';
 import createSvg from '@modules/createSvg/createSvg';
+import { processedFileName } from '@utilities/processedFileName';
 
 const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
@@ -16,8 +17,14 @@ const isFulfilled = <T>(
 export async function convert(filepaths: string[], options: OptionValues) {
   // process options
   const { destination } = options;
+
   if (!validDestination(destination)) {
     return 1;
+  }
+
+  let { fileName: userFileName } = options;
+  if (userFileName) {
+    userFileName = processedFileName(userFileName);
   }
 
   const color = colorProcessing(options.color.toLowerCase()) || 'black';
@@ -52,5 +59,5 @@ export async function convert(filepaths: string[], options: OptionValues) {
     )
     .join('\n');
 
-  createSvg(finalElements, destination);
+  createSvg(finalElements, destination, userFileName);
 }

@@ -5,21 +5,21 @@ import { processDestinationFileName } from './processDestinationFileName';
 const testCases = [
   {
     label: 'expect simple return',
-    destination: 'testfolder/image.bob.svg',
-    source: 'testfolder/image.bob.svg',
-    expected: 'testfolder/image.bob.svg',
+    destination: 'testFolder/image.bob.svg',
+    source: 'testFolder/image.bob.svg',
+    expected: 'testFolder/image.bob.svg',
   },
   {
     label: 'expect simple return with space',
-    destination: 'testfolder/image bob.svg',
-    source: 'testfolder/image bob.svg',
-    expected: 'testfolder/image-bob.svg',
+    destination: 'testFolder/image bob.svg',
+    source: 'testFolder/image bob.svg',
+    expected: 'testFolder/image-bob.svg',
   },
   {
     label: 'expect destination path with source name',
-    destination: 'testfolder/',
+    destination: 'testFolder/',
     source: 'https://examplesource.com/bpb.svg',
-    expected: 'testfolder/bpb.svg',
+    expected: 'testFolder/bpb.svg',
   },
 ];
 
@@ -31,6 +31,6 @@ for (const { label, destination, source, expected } of testCases) {
 
 test('expect error when no file name found', {}, () => {
   expect(() =>
-    processDestinationFileName('testfolder/', 'testfolder/'),
+    processDestinationFileName('testFolder/', 'testFolder/'),
   ).toThrowError('No file name found');
 });

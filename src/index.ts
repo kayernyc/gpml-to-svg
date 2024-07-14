@@ -23,6 +23,7 @@ program
   .requiredOption('-d, --destination <string>', 'where to save the svg')
   .option('-c, --color <string>', 'fill color', 'teal')
   .option('-r, --rotation-file <string>', 'path to the rotation file')
+  .option('-fn, --file-name <string>', 'name for generated file')
   .argument('<filepaths...>')
   .action(async (filepaths, options) => {
     convert(filepaths, options);
