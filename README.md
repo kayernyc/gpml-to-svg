@@ -29,6 +29,8 @@ and `<TIME>` is the moment in the model when all the shapes you want converted e
 
 `<ROTATION FILE>` is an optional parameter if you want to specify a rotation file in a different location than any of the directories you list. Otherwise the CLI will look for a rotation file near files you have added as parameters.
 
+Destination, time and a file to convert are required. If you're not passing in a directory of files, the rotation file is *also* required.
+
 **The path or paths you want to convert *MUST* come last.**
 
 `node dist/index.js convert -d <DESTINATION DIRECTORY> -c "<COLOR>" -t <TIME> <FULL PATH>`
