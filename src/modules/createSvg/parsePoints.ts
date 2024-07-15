@@ -148,16 +148,32 @@ function createPoints(currentPointsArray: ProcessedPoint[], color: string) {
     .join('');
 }
 
-function createLine(currentPointsArray: ProcessedPoint[], color: string) {
+function createLine(
+  currentPointsArray: ProcessedPoint[],
+  color: string,
+  metaData = '',
+) {
   return `<polyline points="${currentPointsArray
     .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
-    .join(' ')}" fill="none" style="stroke:${color}; stroke-width:2" />`;
+    .join(
+      ' ',
+    )}" fill="none" ${metaData ? `id="${metaData}"` : ''} style="stroke:${color}; stroke-width:2" />`;
 }
 
-function createShape(currentPointsArray: ProcessedPoint[], color: string) {
+function createShape(
+  currentPointsArray: ProcessedPoint[],
+  color: string,
+  metaData = '',
+) {
   return `<polygon points="${currentPointsArray
     .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
-    .join(' ')}" style="fill:${color}" />`;
+    .join(
+      ' ',
+    )}" ${metaData ? `id="${metaData}"` : ''} style="fill:${color}" />`;
+}
+
+interface keyable {
+  [key: string]: any;
 }
 
 function parsePoints(
@@ -169,6 +185,14 @@ function parsePoints(
     const data = JSON.stringify(outlineObject);
     if (isFeatureValid(data) === false) {
       return '';
+    }
+
+    let metaData = '';
+
+    const featureObject = outlineObject as keyable;
+
+    if (featureObject.name) {
+      metaData = featureObject.name;
     }
 
     const featureType: ShapeType = isFeatureValid(data) as ShapeType;
@@ -195,7 +219,7 @@ function parsePoints(
         // });
       } else {
         currentPointArrays.forEach((currentPointArray) => {
-          currentStr += createShape(currentPointArray, color);
+          currentStr += createShape(currentPointArray, color, metaData);
         });
       }
 
