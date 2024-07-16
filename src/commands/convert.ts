@@ -31,19 +31,19 @@ export async function convert(filepaths: string[], options: OptionValues) {
     throw Error('No valid files found.');
   }
 
-  let { fileName: userFileName } = options;
-  if (userFileName) {
-    userFileName = processedFileName(userFileName);
-  }
-  // search for single files or directories as potential name sources
-  // defineDestFileName();
-
   const { files, rotations, userFileNameCandidates } = validFiles;
   console.log({ userFileNameCandidates });
   const rotationFilePath = findValidRotationFile(
     options.rotationFile,
     rotations,
   );
+
+  let { fileName: userFileName } = options;
+  if (userFileName) {
+    userFileName = processedFileName(userFileName);
+  }
+  // search for single files or directories as potential name sources
+  await defineDestFileName(userFileNameCandidates);
 
   const rotationDict = parseRotationFile(rotationFilePath);
   const rotationTimes = findRotationTimes(rotationDict, timeInt);
