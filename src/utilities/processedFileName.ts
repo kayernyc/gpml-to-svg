@@ -1,6 +1,6 @@
 import path from 'path';
 
-export function processedFileName(url: string) {
+export function processedFileName(url: string, extension = true) {
   let nameSource = path.basename(url);
 
   // get everything before the last period
@@ -13,5 +13,5 @@ export function processedFileName(url: string) {
   if (!nameSource) return undefined;
 
   nameSource = nameSource.replaceAll(' ', '-');
-  return `${nameSource}.svg`;
+  return extension ? `${nameSource}.svg` : nameSource;
 }
