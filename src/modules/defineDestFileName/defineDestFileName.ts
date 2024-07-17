@@ -1,13 +1,26 @@
-import prompts from 'prompts';
+import { select, Separator } from '@inquirer/prompts';
 
 export async function defineDestFileName(
   candidateNames: string[],
 ): Promise<string> {
-  const response = await prompts({
-    type: 'number',
-    name: 'value',
-    message: 'How old are you?',
-    validate: (value) => (value < 18 ? `Nightclub is 18+ only` : true),
-  });
+  const choices: {
+    value: string;
+    description?: string;
+  }[] = candidateNames.map((name) => ({
+    value: name,
+  }));
+
+  if (choices.length > 1) {
+    choices.push({
+      value: 'no',
+      description: 'Choose your own file name',
+    });
+    const answer = await select({
+      message: 'Would you like to name the new file:',
+      choices,
+    });
+
+    console.log({ answer });
+  }
   return '';
 }
