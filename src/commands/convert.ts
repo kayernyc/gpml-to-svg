@@ -41,9 +41,9 @@ export async function convert(filepaths: string[], options: OptionValues) {
   let { fileName: userFileName } = options;
   if (userFileName) {
     userFileName = processedFileName(userFileName);
+  } else {
+    userFileName = await defineDestFileName(userFileNameCandidates);
   }
-  // search for single files or directories as potential name sources
-  await defineDestFileName(userFileNameCandidates);
 
   const rotationDict = parseRotationFile(rotationFilePath);
   const rotationTimes = findRotationTimes(rotationDict, timeInt);

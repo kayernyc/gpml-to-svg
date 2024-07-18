@@ -19,7 +19,7 @@ export function findValidFiles(
     filepaths.reduce(
       (acc, proposedPath) => {
         if (isDirectory(proposedPath)) {
-          acc.userFileNameCandidates.push(
+          acc.userFileNameCandidates.unshift(
             proposedPath.split(path.sep).pop() || '',
           );
           acc.directories.push(proposedPath);
