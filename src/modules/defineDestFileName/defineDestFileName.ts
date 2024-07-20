@@ -1,5 +1,6 @@
 import { input, select, Separator } from '@inquirer/prompts';
 import toggle from 'inquirer-toggle';
+import { validateFileName } from './fileNameValidation';
 
 type Choice<Value> = {
   value: Value;
@@ -10,7 +11,17 @@ type Choice<Value> = {
 };
 
 async function createFileName(): Promise<string> {
-  const answer = await input({ message: 'Enter the name:' });
+  const answer = await input({
+    message: 'Enter the name:',
+    validate: (candidateFileName: string) => {
+      const { message } = validateFileName(candidateFileName);
+      if (message) {
+        return message;
+      }
+
+      return true;
+    },
+  });
 
   return answer;
 }
@@ -31,7 +42,7 @@ async function selectFileName(candidateNames: string[]): Promise<string> {
     ];
 
     const fileName = await select({
-      message: 'Would you like to name the new file:',
+      message: 'Would you like to name the new file?',
       choices,
     });
 

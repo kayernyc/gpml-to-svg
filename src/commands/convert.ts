@@ -32,7 +32,6 @@ export async function convert(filepaths: string[], options: OptionValues) {
   }
 
   const { files, rotations, userFileNameCandidates } = validFiles;
-  console.log({ userFileNameCandidates });
   const rotationFilePath = findValidRotationFile(
     options.rotationFile,
     rotations,

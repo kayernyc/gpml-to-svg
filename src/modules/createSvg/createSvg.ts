@@ -10,6 +10,11 @@ async function createSvg(
   fileName = 'test.svg',
 ) {
   const content = `${svgHeader}${featureString}${svgFooter}`;
+
+  if (fileName.slice(-4) !== '.svg') {
+    fileName += '.svg';
+  }
+
   await fs
     .mkdir(destPath, { recursive: true })
     .then(() => console.log(`Directory '${destPath}' created.`))
