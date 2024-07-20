@@ -22,7 +22,7 @@ export async function convertFileToGroup(
 
   // Finds all features that are valid at the given time
   featureArray = filterForTime(featureArray, time);
-  const fileName = processedFileName(path.basename(filepath))?.slice(0, -4);
+  const fileName = processedFileName(path.basename(filepath), false);
 
   const parsePointsWithRotation = featureAndRotationFactory(
     rotationTimes,

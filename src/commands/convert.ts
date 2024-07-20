@@ -9,6 +9,7 @@ import { convertFileToGroup } from '../modules/convertFileToGroup.ts/convertFile
 import { validDestination } from '@modules/validDestination/validDestination';
 import createSvg from '@modules/createSvg/createSvg';
 import { processedFileName } from '@utilities/processedFileName';
+import { defineDestFileName } from '@modules/defineDestFileName/defineDestFileName';
 
 const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
@@ -22,11 +23,6 @@ export async function convert(filepaths: string[], options: OptionValues) {
     return 1;
   }
 
-  let { fileName: userFileName } = options;
-  if (userFileName) {
-    userFileName = processedFileName(userFileName);
-  }
-
   const color = colorProcessing(options.color.toLowerCase()) || 'black';
   const validFiles = findValidFiles(filepaths);
   const timeInt = parseInt(options.time);
@@ -35,11 +31,18 @@ export async function convert(filepaths: string[], options: OptionValues) {
     throw Error('No valid files found.');
   }
 
-  const { files, rotations } = validFiles;
+  const { files, rotations, userFileNameCandidates } = validFiles;
   const rotationFilePath = findValidRotationFile(
     options.rotationFile,
     rotations,
   );
+
+  let { fileName: userFileName } = options;
+  if (userFileName) {
+    userFileName = processedFileName(userFileName);
+  } else {
+    userFileName = await defineDestFileName(userFileNameCandidates);
+  }
 
   const rotationDict = parseRotationFile(rotationFilePath);
   const rotationTimes = findRotationTimes(rotationDict, timeInt);
