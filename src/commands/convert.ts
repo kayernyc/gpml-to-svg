@@ -23,6 +23,8 @@ export async function convert(filepaths: string[], options: OptionValues) {
     return 1;
   }
 
+  console.log({ options });
+
   const color = colorProcessing(options.color.toLowerCase()) || 'black';
   const validFiles = findValidFiles(filepaths);
   const timeInt = parseInt(options.time);
