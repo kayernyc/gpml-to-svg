@@ -8,6 +8,8 @@ import Quaternion from 'quaternion';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
+const scaleMultiplier = 10;
+
 type ProcessedPoint = {
   lat: number;
   long: number;
@@ -134,6 +136,10 @@ function createPointsArray(
         currentPath.push(previousPoint);
       }
     }
+  });
+
+  currentPath = currentPath.map(({ lat, long }) => {
+    return { lat: lat * scaleMultiplier, long: long * scaleMultiplier };
   });
 
   return mostRecentPath.length ? [currentPath, mostRecentPath] : [currentPath];
