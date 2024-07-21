@@ -8,6 +8,8 @@ import Quaternion from 'quaternion';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
+const scaleMultiplier = 10;
+
 type ProcessedPoint = {
   lat: number;
   long: number;
@@ -136,6 +138,10 @@ function createPointsArray(
     }
   });
 
+  currentPath = currentPath.map(({ lat, long }) => {
+    return { lat: lat * scaleMultiplier, long: long * scaleMultiplier };
+  });
+
   return mostRecentPath.length ? [currentPath, mostRecentPath] : [currentPath];
 }
 
@@ -143,7 +149,7 @@ function createPoints(currentPointsArray: ProcessedPoint[], color: string) {
   return currentPointsArray
     .map(
       (point: ProcessedPoint) =>
-        `<circle cx="${point.long * 10}" cy="${point.lat * 10}" r="5" style="fill:${color}" />`,
+        `<circle cx="${point.long}" cy="${point.lat}" r="5" style="fill:${color}" />`,
     )
     .join('');
 }
@@ -154,7 +160,7 @@ function createLine(
   metaData = '',
 ) {
   return `<polyline points="${currentPointsArray
-    .map((point: ProcessedPoint) => `${point.long * 10} ${point.lat * 10}`)
+    .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
     .join(
       ' ',
     )}" fill="none" ${metaData ? `id="${metaData}"` : ''} style="stroke:${color}; stroke-width:2" />`;
@@ -166,7 +172,7 @@ function createShape(
   metaData = '',
 ) {
   return `<polygon points="${currentPointsArray
-    .map((point: ProcessedPoint) => `${point.long * 10} ${point.lat * 10}`)
+    .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
     .join(
       ' ',
     )}" ${metaData ? `id="${metaData}"` : ''} style="fill:${color}" />`;
