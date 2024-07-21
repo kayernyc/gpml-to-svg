@@ -1,9 +1,5 @@
 import parsePoints from '@modules/createSvg/parsePoints';
-import {
-  RotationDict,
-  RotationNode,
-  RotationRecord,
-} from '@projectTypes/rotationTypes';
+import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
 import { FeatureCollection } from '@projectTypes/timeTypes';
 import { eulerToQuaternion } from '@modules/applyRotation/transformCoordinates';
 import Quaternion from 'quaternion';

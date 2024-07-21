@@ -143,7 +143,7 @@ function createPoints(currentPointsArray: ProcessedPoint[], color: string) {
   return currentPointsArray
     .map(
       (point: ProcessedPoint) =>
-        `<circle cx="${point.long}" cy="${point.lat}" r="5" style="fill:${color}" />`,
+        `<circle cx="${point.long * 10}" cy="${point.lat * 10}" r="5" style="fill:${color}" />`,
     )
     .join('');
 }
@@ -154,7 +154,7 @@ function createLine(
   metaData = '',
 ) {
   return `<polyline points="${currentPointsArray
-    .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
+    .map((point: ProcessedPoint) => `${point.long * 10} ${point.lat * 10}`)
     .join(
       ' ',
     )}" fill="none" ${metaData ? `id="${metaData}"` : ''} style="stroke:${color}; stroke-width:2" />`;
@@ -166,7 +166,7 @@ function createShape(
   metaData = '',
 ) {
   return `<polygon points="${currentPointsArray
-    .map((point: ProcessedPoint) => `${point.long} ${point.lat}`)
+    .map((point: ProcessedPoint) => `${point.long * 10} ${point.lat * 10}`)
     .join(
       ' ',
     )}" ${metaData ? `id="${metaData}"` : ''} style="fill:${color}" />`;
