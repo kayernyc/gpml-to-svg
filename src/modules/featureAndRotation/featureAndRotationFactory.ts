@@ -55,11 +55,8 @@ export function findFinalRotation(
   return qTransform;
 }
 
-export function featureAndRotationFactory(
-  rotationTimes: RotationRecord,
-  color: string,
-) {
-  return function (feature: FeatureCollection) {
+export function featureAndRotationFactory(rotationTimes: RotationRecord) {
+  return function (feature: FeatureCollection, color: string) {
     const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
     const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
 

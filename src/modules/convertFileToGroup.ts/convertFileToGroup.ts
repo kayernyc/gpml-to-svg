@@ -24,13 +24,10 @@ export async function convertFileToGroup(
   featureArray = filterForTime(featureArray, time);
   const fileName = processedFileName(path.basename(filepath), false);
 
-  const parsePointsWithRotation = featureAndRotationFactory(
-    rotationTimes,
-    color,
-  );
+  const parsePointsWithRotation = featureAndRotationFactory(rotationTimes);
 
   const svgFeatures = featureArray
-    ?.map((feature) => parsePointsWithRotation(feature))
+    ?.map((feature) => parsePointsWithRotation(feature, color))
     .join('');
 
   if (svgFeatures?.length) {
