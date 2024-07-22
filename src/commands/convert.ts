@@ -1,7 +1,7 @@
 import { findValidFiles } from '@modules/validFiles/findValidFiles';
 import { OptionValues } from 'commander';
 
-import colorProcessing from '@utilities/colorProcessing';
+import colorProcessing, { rgbToHex } from '@utilities/colorProcessing';
 import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile';
 import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
@@ -10,6 +10,7 @@ import { validDestination } from '@modules/validDestination/validDestination';
 import createSvg from '@modules/createSvg/createSvg';
 import { processedFileName } from '@utilities/processedFileName';
 import { defineDestFileName } from '@modules/defineDestFileName/defineDestFileName';
+import { createColorArray } from '@modules/colorMap/createColorArray';
 
 const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
@@ -23,9 +24,8 @@ export async function convert(filepaths: string[], options: OptionValues) {
     return 1;
   }
 
-  console.log({ options });
-
-  const color = colorProcessing(options.color.toLowerCase()) || 'black';
+  const color = colorProcessing(options.color.toLowerCase()) || 'gray';
+  const { multiColor } = options;
   const validFiles = findValidFiles(filepaths);
   const timeInt = parseInt(options.time);
 
@@ -49,9 +49,23 @@ export async function convert(filepaths: string[], options: OptionValues) {
   const rotationDict = parseRotationFile(rotationFilePath);
   const rotationTimes = findRotationTimes(rotationDict, timeInt);
 
+  const colorMap: number[][] = createColorArray(
+    color,
+    files.length,
+    multiColor,
+  );
+
   const processedFiles = await Promise.allSettled(
-    files.map(async (filePath) => {
-      return convertFileToGroup(filePath, rotationTimes, color, timeInt);
+    files.map(async (filePath, index) => {
+      // get rgb color
+      const rgbColor = colorMap[Math.min(index, colorMap.length)] as [
+        number,
+        number,
+        number,
+      ];
+      // convert rgb to hex
+      const hexColor = rgbToHex(rgbColor);
+      return convertFileToGroup(filePath, rotationTimes, hexColor, timeInt);
     }),
   );
 
