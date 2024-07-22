@@ -1,11 +1,12 @@
 import { stderr } from 'process';
 import NAMED_COLORS from '../NAMED_COLORS';
+import { RgbColorArrayType } from '@modules/colorMap/createColorArray';
 
 const HexColorRegex = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 
 // CREDIT WHERE CREDIT IS DUE: https://stackoverflow.com/a/5624139
-export function hexToRgb(hex: string) {
+export function hexToRgb(hex: string): RgbColorArrayType | undefined {
   if (!HexColorRegex.test(hex) && !shorthandRegex.test(hex)) {
     stderr.write(`Color ${hex} is not valid. Defaulting to gray.`);
     return [128, 128, 128];
@@ -17,13 +18,14 @@ export function hexToRgb(hex: string) {
   });
 
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [
-        parseInt(result[1], 16), // red
-        parseInt(result[2], 16), // green
-        parseInt(result[3], 16), // blue
-      ]
-    : [];
+  if (result) {
+    return [
+      parseInt(result[1], 16), // red
+      parseInt(result[2], 16), // green
+      parseInt(result[3], 16), // blue
+    ];
+  }
+  return;
 }
 
 export function componentToHex(colorValue: number) {
@@ -42,18 +44,18 @@ export function rgbToHex(rgbNumber: [number, number, number]): string {
   return result;
 }
 
-export default function colorProcessing(color: string): number[] {
+export default function colorProcessing(color: string): RgbColorArrayType {
   if (NAMED_COLORS[color] !== undefined) {
-    return NAMED_COLORS[color];
+    return NAMED_COLORS[color] as RgbColorArrayType;
   }
 
   if (HexColorRegex.test(color)) {
     if (color.charAt(0) !== '#') {
       color = `#${color}`;
     }
-    return hexToRgb(color);
+    return hexToRgb(color) as RgbColorArrayType;
   }
 
-  console.warn('Invalid color. Defaulting to gray.');
+  stderr.write('Invalid color. Defaulting to gray.');
   return [128, 128, 128];
 }

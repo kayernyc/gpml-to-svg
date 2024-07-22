@@ -1,3 +1,5 @@
+export type RgbColorArrayType = [number, number, number];
+
 export function stepSingleChannel(
   color: number,
   step: number,
@@ -12,7 +14,7 @@ export function stepSingleChannel(
 }
 
 export function createRange(rgbColor: number[], numberOfFiles: number) {
-  const colorRange: number[][] = [];
+  const colorRange: RgbColorArrayType[] = [];
 
   numberOfFiles = Math.min(149, numberOfFiles);
 
@@ -25,7 +27,7 @@ export function createRange(rgbColor: number[], numberOfFiles: number) {
     stepSingleChannel(color, step, numberOfFiles),
   );
 
-  const finalArray: number[][] = [];
+  const finalArray: RgbColorArrayType[] = [];
 
   for (let i = 0; i < numberOfFiles; i++) {
     finalArray.push([
@@ -39,10 +41,10 @@ export function createRange(rgbColor: number[], numberOfFiles: number) {
 }
 
 export function createColorArray(
-  color: number[],
+  color: RgbColorArrayType,
   numberOfFiles: number,
   multiColor = false,
-): number[][] {
+): RgbColorArrayType[] {
   if (multiColor && numberOfFiles > 1) {
     const createdRange = createRange(color, numberOfFiles - 1);
     return [color, ...createdRange];

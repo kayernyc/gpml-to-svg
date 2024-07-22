@@ -10,7 +10,10 @@ import { validDestination } from '@modules/validDestination/validDestination';
 import createSvg from '@modules/createSvg/createSvg';
 import { processedFileName } from '@utilities/processedFileName';
 import { defineDestFileName } from '@modules/defineDestFileName/defineDestFileName';
-import { createColorArray } from '@modules/colorMap/createColorArray';
+import {
+  createColorArray,
+  RgbColorArrayType,
+} from '@modules/colorMap/createColorArray';
 
 const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
@@ -24,7 +27,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
     return 1;
   }
 
-  const color = colorProcessing(options.color.toLowerCase()) || 'gray';
+  const color = colorProcessing(options.color.toLowerCase());
   const { multiColor } = options;
   const validFiles = findValidFiles(filepaths);
   const timeInt = parseInt(options.time);
@@ -49,7 +52,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
   const rotationDict = parseRotationFile(rotationFilePath);
   const rotationTimes = findRotationTimes(rotationDict, timeInt);
 
-  const colorMap: number[][] = createColorArray(
+  const colorMap: RgbColorArrayType[] = createColorArray(
     color,
     files.length,
     multiColor,
