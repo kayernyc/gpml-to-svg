@@ -6,7 +6,14 @@ export function stepSingleChannel(
   numberOfFiles: number,
 ): number[] {
   const stepsAbove = Math.min(Math.floor((255 - color) / step), numberOfFiles);
-  const start = color + stepsAbove * step;
+  const stepsBelow = Math.min(Math.floor(color / step), numberOfFiles);
+  let start: number;
+
+  if (stepsBelow <= stepsAbove) {
+    start = (numberOfFiles - stepsBelow) * step + color;
+  } else {
+    start = color + stepsAbove * step;
+  }
 
   return new Array(numberOfFiles)
     .fill(0)
