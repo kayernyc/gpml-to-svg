@@ -1,3 +1,4 @@
+import { colorGradient } from '@commands/colorGradient';
 import { convert } from '@commands/convert';
 import { Command } from 'commander';
 import {
@@ -50,7 +51,7 @@ program
   .option(GENERATED_FILE_NAME_DECLARATION, GENERATED_FILE_NAME_DESCRIPTION)
   .option('-f, --file-path <string>', 'file to color with a gradient')
   .action(async (options) => {
-    console.log(options);
+    colorGradient(options);
   });
 
 program.parse(process.argv);
