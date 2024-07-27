@@ -4,3 +4,4 @@ export const GPLATES_X_OFFSET = GPLATES_WIDTH / 2;
 export const GPLATES_Y_OFFSET = GPLATES_HEIGHT / 2;
 
 export const GPLATES_GPML_FILE_EXT = '.gpml';
+export const COLOR_RAMP_FILE_EXT = '.cpt';

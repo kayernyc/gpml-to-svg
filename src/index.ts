@@ -47,6 +47,10 @@ program
   .command('color-gradient')
   .requiredOption(TIME_DECLARATION, TIME_DESCRIPTION)
   .requiredOption(DESTINATION_DECLARATION, DESTINATION_DESCRIPTION)
+  .requiredOption(
+    '-cr, --color-ramp <string>',
+    'file for gradient or color ramp',
+  )
   .option(ROTATION_FILE_DECLARATION, ROTATION_FILE_DESCRIPTION)
   .option(GENERATED_FILE_NAME_DECLARATION, GENERATED_FILE_NAME_DESCRIPTION)
   .option('-f, --file-path <string>', 'file to color with a gradient')

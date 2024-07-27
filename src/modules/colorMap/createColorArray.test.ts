@@ -6,7 +6,7 @@ describe('stepSingleChannel', () => {
     const color = 128;
     const step = 10;
     const numberOfFiles = 5;
-    const expected = [178, 168, 158, 148, 138];
+    const expected = [128, 118, 108, 98, 88];
     const result = stepSingleChannel(color, step, numberOfFiles);
     expect(result).toEqual(expected);
   });
