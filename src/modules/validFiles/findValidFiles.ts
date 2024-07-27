@@ -19,20 +19,20 @@ export function findValidFiles(
     filepaths.reduce(
       (acc, proposedPath) => {
         if (isDirectory(proposedPath)) {
-          acc.userFileNameCandidates.unshift(
-            proposedPath.split(path.sep).pop() || '',
-          );
+          acc.userFileNameCandidates.unshift(path.dirname(proposedPath) || '');
           acc.directories.push(proposedPath);
           // traverse directory and add all files to files array
           const allFilesInDir = readdirSync(proposedPath);
-          allFilesInDir.forEach((dirFilepath) => {
-            if (path.extname(dirFilepath) === GPLATES_GPML_FILE_EXT) {
-              acc.userFileNameCandidates.push(path.basename(dirFilepath));
-              const fullPath = path.join(proposedPath, dirFilepath);
+          allFilesInDir.forEach((candidateProposedPath) => {
+            if (path.extname(candidateProposedPath) === GPLATES_GPML_FILE_EXT) {
+              acc.userFileNameCandidates.push(
+                path.basename(candidateProposedPath),
+              );
+              const fullPath = path.join(proposedPath, candidateProposedPath);
               acc.files.push(fullPath);
             }
-            if (path.extname(dirFilepath) === '.rot') {
-              const fullPath = path.join(proposedPath, dirFilepath);
+            if (path.extname(candidateProposedPath) === '.rot') {
+              const fullPath = path.join(proposedPath, candidateProposedPath);
               acc.rotations.push(fullPath);
             }
           });
@@ -40,6 +40,7 @@ export function findValidFiles(
           isFile(proposedPath) &&
           path.extname(proposedPath) === GPLATES_GPML_FILE_EXT
         ) {
+          acc.directories.push(path.dirname(proposedPath));
           acc.userFileNameCandidates.push(path.basename(proposedPath));
           acc.files.push(proposedPath);
         } else if (

@@ -6,6 +6,9 @@ import { findValidFiles } from '@modules/validFiles/findValidFiles';
 import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile';
 import { processedFileName } from '@utilities/processedFileName';
 import { OptionValues } from 'commander';
+import { readdirSync } from 'fs';
+import { GPLATES_GPML_FILE_EXT } from 'GPLATES_CONSTANTS';
+import path from 'path';
 
 export async function validateRequiredFileProcessingOptions(
   options: OptionValues,
@@ -33,13 +36,34 @@ export async function validateRequiredFileProcessingOptions(
   }
 
   const timeInt = parseInt(options.time);
-  const { files, rotations, userFileNameCandidates } = validFiles;
+  const { files, rotations, userFileNameCandidates, directories } = validFiles;
 
   let { fileName: userFileName } = options;
   if (userFileName) {
     userFileName = processedFileName(userFileName);
   } else {
     userFileName = await defineDestFileName(userFileNameCandidates);
+  }
+
+  if (!options.rotationFile && !rotations.length && directories.length) {
+    const proposedRotations = directories
+      .map((dirFilepath: string) => {
+        const allFilesInDir = readdirSync(dirFilepath);
+        const rotationArray: string[] = [];
+        allFilesInDir.forEach((candidatePath) => {
+          if (path.extname(candidatePath) === '.rot') {
+            rotationArray.push(path.join(dirFilepath, candidatePath));
+          }
+        });
+        return rotationArray;
+      })
+      .flat();
+
+    if (proposedRotations.length) {
+      proposedRotations.forEach((candidatePath: string) =>
+        rotations.push(candidatePath),
+      );
+    }
   }
 
   const rotationFilePath = findValidRotationFile(
