@@ -2,8 +2,7 @@ export const TIME_DECLARATION = '-t, --time <number>';
 export const TIME_DESCRIPTION = 'point in time that a feature must exist';
 
 export const DESTINATION_DECLARATION = '-d, --destination <string>';
-export const DESTINATION_DESCRIPTION =
-  'point in time that a feature must exist';
+export const DESTINATION_DESCRIPTION = 'destination for the generated file';
 
 export const ROTATION_FILE_DECLARATION = '-r, --rotation-file <string>';
 export const ROTATION_FILE_DESCRIPTION = 'path to the rotation file';

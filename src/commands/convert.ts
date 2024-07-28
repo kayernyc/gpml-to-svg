@@ -5,7 +5,7 @@ import colorProcessing, { rgbToHex } from '@utilities/colorProcessing';
 import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile';
 import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
-import { convertFileToGroup } from '../modules/convertFileToGroup.ts/convertFileToGroup';
+import { convertFileToGroup } from '../modules/convert/convertFileToGroup';
 import { validDestination } from '@modules/validDestination/validDestination';
 import createSvg from '@modules/createSvg/createSvg';
 import { processedFileName } from '@utilities/processedFileName';
@@ -61,7 +61,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
   const processedFiles = await Promise.allSettled(
     files.map(async (filePath, index) => {
       // get rgb color
-      const rgbColor = colorMap[Math.min(index, colorMap.length)] as [
+      const rgbColor = colorMap[Math.min(index, colorMap.length - 1)] as [
         number,
         number,
         number,
