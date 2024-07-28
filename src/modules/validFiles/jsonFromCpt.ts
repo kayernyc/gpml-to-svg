@@ -1,15 +1,28 @@
 import { RgbColorArrayType } from '@modules/colorMap/createColorArray';
+import { validateRgbColor } from '@utilities/validateRgbColor';
 import { promises as fs } from 'fs';
 import { stderr } from 'process';
 
 interface CptRampRule {
-  anchor: number;
+  anchor: number | 'B' | 'F' | 'N';
   color: RgbColorArrayType;
 }
 
 type CptRampRuleArray = CptRampRule[];
 
-export function findRgbColorCode(line: string): CptRampRuleArray {
+function parseKey(key: string): number | 'B' | 'F' | 'N' {
+  if (key === 'B' || key === 'F' || key === 'N') {
+    return key;
+  }
+
+  if (isNaN(parseInt(key))) {
+    process.exit(1);
+  } else {
+    return parseInt(key);
+  }
+}
+
+export function findRgbColorCodeRule(line: string): CptRampRuleArray {
   let charArray = line.split('');
   let numberArray = [];
   let currentNumStr = '';
@@ -18,6 +31,11 @@ export function findRgbColorCode(line: string): CptRampRuleArray {
     const currentChar = charArray.shift();
 
     if (currentChar === undefined) {
+      continue;
+    }
+
+    if (currentChar === 'B' || currentChar === 'F' || currentChar === 'N') {
+      numberArray.push(currentChar);
       continue;
     }
 
@@ -47,22 +65,23 @@ export function findRgbColorCode(line: string): CptRampRuleArray {
   const accumulator: CptRampRuleArray = [];
 
   for (let i = 0; i < numberArray.length; i += 4) {
-    let currentRule: CptRampRule = {
-      anchor: parseInt(numberArray[i]),
-      color: [
-        parseInt(numberArray[i + 1]),
-        parseInt(numberArray[i + 2]),
-        parseInt(numberArray[i + 3]),
-      ],
-    };
+    try {
+      let currentRule: CptRampRule = {
+        anchor: parseKey(numberArray[i]), // parseInt(numberArray[i]),
+        color: [
+          parseInt(numberArray[i + 1]),
+          parseInt(numberArray[i + 2]),
+          parseInt(numberArray[i + 3]),
+        ],
+      };
 
-    currentRule.color.forEach((colorNumber: number) => {
-      if (colorNumber > 255 || colorNumber < 0) {
-        process.exit(1);
-      }
-    });
-
-    accumulator.push(currentRule);
+      // throws if the Rgb value doesn't conform
+      validateRgbColor(currentRule.color);
+      accumulator.push(currentRule);
+    } catch (err) {
+      console.log(err);
+      process.exit(2);
+    }
   }
 
   return accumulator;
@@ -74,30 +93,9 @@ export async function jsonFromCpt(filePath: string) {
     .split('\n')
     .map((line) => line.trim())
     .filter((line) => !line.includes('#'))
-    .reduce(
-      (acc, line) => {
-        switch (line.charAt(0)) {
-          case 'B':
-            acc.B = line;
-            break;
-
-          case 'F':
-            acc.F = line;
-            break;
-
-          case 'N':
-            acc.N = line;
-            break;
-
-          default:
-        }
-        return acc;
-      },
-      {
-        B: '',
-        F: '',
-        N: '',
-      },
-    );
+    .reduce((acc, line) => {
+      acc.push(findRgbColorCodeRule(line)[0]);
+      return acc;
+    }, [] as CptRampRuleArray);
   console.log({ dataArray });
 }
