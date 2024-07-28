@@ -1,6 +1,7 @@
 import {
   findColorInRange,
   findOutOfRangeValues,
+  gradedStepFactory,
   RampDictionaryType,
 } from '@modules/colorGradient/gradedStepFactory';
 import { findNumericRangeValues } from '@modules/colorGradient/gradedStepFactory';
@@ -151,6 +152,47 @@ describe('findColorInRange', () => {
     const age = 400;
     const result = findColorInRange(age, rampDictionary, rangeArray);
     const expected = [131.5, 172.5, 175.5];
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('gradedStepFactory', () => {
+  const colorRamp: CptRampRuleArray = [
+    { anchor: 'B', color: [23, 45, 67] },
+    { anchor: 'F', color: [23, 145, 167] },
+    { anchor: 'N', color: [123, 145, 167] },
+    { anchor: 300, color: [123, 145, 167] },
+    { anchor: 100, color: [255, 245, 267] },
+    { anchor: 700, color: [95, 90, 40] },
+  ];
+
+  const findColor = gradedStepFactory(colorRamp);
+
+  it('returns below value when passed in an early age.', () => {
+    const result = findColor(50);
+    const expected = [23, 45, 67];
+
+    expect(result).toEqual(expected);
+  });
+
+  it('returns above value when passed in an early age.', () => {
+    const result = findColor(750);
+    const expected = [23, 145, 167];
+
+    expect(result).toEqual(expected);
+  });
+
+  it('returns correct middle value between 100 and 300.', () => {
+    const result = findColor(200);
+    const expected = [189, 195, 217];
+
+    expect(result).toEqual(expected);
+  });
+
+  it('returns correct off-middle value between 300 and 700.', () => {
+    const result = findColor(500);
+    const expected = [109, 117.5, 103.5];
+
     expect(result).toEqual(expected);
   });
 });

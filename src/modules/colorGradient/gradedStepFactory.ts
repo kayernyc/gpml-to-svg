@@ -124,6 +124,7 @@ export function gradedStepFactory(colorRamp: CptRampRuleArray) {
         return aboveRange;
 
       default:
+        return findColorInRange(age, rampDictionary, rangeArray);
     }
   };
 }

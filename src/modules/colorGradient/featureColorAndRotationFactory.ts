@@ -4,6 +4,8 @@ import { FeatureCollection, TimeInstant } from '@projectTypes/timeTypes';
 import Quaternion from 'quaternion';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
 import { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
+import { gradedStepFactory } from './gradedStepFactory';
+import { rgbToHex } from '@utilities/colorProcessing';
 
 function getTimeFromTimeInstant(time: TimeInstant): number {
   const value = time.timePosition;
@@ -14,13 +16,13 @@ function getTimeFromTimeInstant(time: TimeInstant): number {
   return value as unknown as number;
 }
 
-function findColorFromAgeAndRamp(age: number, ramp: CptRampRuleArray) {}
-
 export function featureColorAndRotationFactory(
   colorRamp: CptRampRuleArray,
   rotationTimes: RotationRecord,
   targetTime: number,
 ) {
+  const gradedColor = gradedStepFactory(colorRamp);
+
   return function (feature: FeatureCollection) {
     const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
     const age =
@@ -29,6 +31,8 @@ export function featureColorAndRotationFactory(
 
     const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
 
+    const hexColor = rgbToHex(gradedColor(age));
+
     if (plateId) {
       try {
         const finalRotation: Quaternion = findFinalRotation(
@@ -36,7 +40,7 @@ export function featureColorAndRotationFactory(
           rotationTimes,
         );
 
-        return parsePoints(feature, '#FFFFFF', finalRotation);
+        return parsePoints(feature, hexColor, finalRotation);
       } catch (e) {
         console.log(e, feature.reconstructionPlateId);
       }

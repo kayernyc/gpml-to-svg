@@ -29,7 +29,7 @@ export function hexToRgb(hex: string): RgbColorArrayType | undefined {
 }
 
 export function componentToHex(colorValue: number) {
-  colorValue = Math.max(0, Math.min(colorValue, 255));
+  colorValue = Math.round(Math.max(0, Math.min(colorValue, 255)));
   var hex = colorValue.toString(16);
   return hex.length == 1 ? '0' + hex : hex;
 }

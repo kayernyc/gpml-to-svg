@@ -1,6 +1,6 @@
 import { convertRampedFileToGroup } from '@modules/colorGradient/convertRampedFileToGroup';
+import createSvg from '@modules/createSvg/createSvg';
 import { validColorRamp } from '@modules/validFiles/validColorRamp';
-import { rgbToHex } from '@utilities/colorProcessing';
 import { OptionValues } from 'commander';
 import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
 import { stderr } from 'process';
@@ -17,7 +17,16 @@ export async function colorGradient(options: OptionValues) {
     process.exit(2);
   }
 
-  await convertRampedFileToGroup(files[0], rotationTimes, ramp, timeInt);
+  const finalElements = await convertRampedFileToGroup(
+    files[0],
+    rotationTimes,
+    ramp,
+    timeInt,
+  );
 
-  console.log({ destination, files, userFileName }, options.colorRamp);
+  if (finalElements === undefined) {
+    process.exit(1);
+  }
+
+  createSvg(finalElements, destination, userFileName);
 }
