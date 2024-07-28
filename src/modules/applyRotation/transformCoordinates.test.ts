@@ -199,7 +199,6 @@ describe('transformPointBetweenPoles', () => {
         initialPole,
         newPole,
       );
-      console.log(cartesianToLatLong(result[0], result[1], result[2]));
 
       expect(result[0]).toBeCloseTo(expected[0], 3);
       expect(result[1]).toBeCloseTo(expected[1], 3);
@@ -313,7 +312,6 @@ const eulerToQuaternionCases = [
 describe('eulerToQuaternion', () => {
   test.each(eulerToQuaternionCases)('$name', ({ name, euler, expected }) => {
     const result = eulerToQuaternion(euler);
-    console.log({ name }, { result });
     expect(result.w).toBeCloseTo(expected.w, 3);
     expect(result.x).toBeCloseTo(expected.x, 3);
     expect(result.y).toBeCloseTo(expected.y, 3);

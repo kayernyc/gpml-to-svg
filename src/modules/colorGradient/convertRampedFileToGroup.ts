@@ -2,15 +2,16 @@ import { parseToJson } from '@modules/findNodes/parseToJson';
 import { filterForTime } from '@modules/findNodes/filterForTime';
 
 import { FeatureCollection } from '@projectTypes/timeTypes';
-import { featureAndRotationFactory } from '@modules/featureAndRotation/featureAndRotationFactory';
 import { RotationRecord } from '@projectTypes/rotationTypes';
 import path from 'path';
 import { processedFileName } from '@utilities/processedFileName';
+import { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
+import { featureColorAndRotationFactory } from './featureColorAndRotationFactory';
 
-export async function convertFileToGroup(
+export async function convertRampedFileToGroup(
   filepath: string,
   rotationTimes: RotationRecord,
-  color: string,
+  colorRamp: CptRampRuleArray,
   time: number,
 ): Promise<string | undefined> {
   let featureArray: FeatureCollection[] | undefined =
@@ -24,10 +25,14 @@ export async function convertFileToGroup(
   featureArray = filterForTime(featureArray, time);
   const fileName = processedFileName(path.basename(filepath), false);
 
-  const parsePointsWithRotation = featureAndRotationFactory(rotationTimes);
+  const parsePointsWithRotation = featureColorAndRotationFactory(
+    colorRamp,
+    rotationTimes,
+    time,
+  );
 
   const svgFeatures = featureArray
-    ?.map((feature) => parsePointsWithRotation(feature, color))
+    ?.map((feature) => parsePointsWithRotation(feature))
     .join('');
 
   if (svgFeatures?.length) {

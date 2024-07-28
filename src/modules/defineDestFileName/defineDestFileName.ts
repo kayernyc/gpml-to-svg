@@ -2,13 +2,7 @@ import { input, select, Separator } from '@inquirer/prompts';
 import toggle from 'inquirer-toggle';
 import { validateFileName } from './fileNameValidation';
 
-type Choice<Value> = {
-  value: Value;
-  name?: string;
-  description?: string;
-  disabled?: boolean | string;
-  type?: never;
-};
+import { Choice } from '@projectTypes/Choice';
 
 async function createFileName(): Promise<string> {
   const answer = await input({

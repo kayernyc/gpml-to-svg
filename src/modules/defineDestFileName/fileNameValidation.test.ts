@@ -30,10 +30,15 @@ describe('validateFileName', () => {
     expect(result.validationResult).toContain(ValidateFileNameResult.TooShort);
   });
 
+  test('should not return TooShort for a file name that 3 letters long', () => {
+    const fileName = 'aaa';
+    const result = validateFileName(fileName);
+    expect(result.validationResult).toContain(ValidateFileNameResult.Valid);
+  });
+
   test('should return TooShort and InvisibleFile for a file name that is too short and begins with a period', () => {
     const fileName = '.a';
     const result = validateFileName(fileName);
-    console.log(result.message);
     expect(result.message)
       .toBe(`The proposed filename ".a" is too short. Please make the filename at least 3 characters long.
 File names should not begin or end with periods. In some file systems these files would become invisible.`);

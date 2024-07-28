@@ -63,7 +63,7 @@ export function validateFileName(fileName: string): validationResponse {
   const validationResponses: ValidateFileNameResult[] = [];
   const userMessage: string[] = [];
 
-  if (fileName.length < 4) {
+  if (fileName.length < 3) {
     validationResponses.push(ValidateFileNameResult.TooShort);
     userMessage.push(
       `The proposed filename "${fileName}" is too short. Please make the filename at least 3 characters long.`,

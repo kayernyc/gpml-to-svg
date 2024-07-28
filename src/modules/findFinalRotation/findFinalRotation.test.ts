@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  findAllRotations,
-  findFinalRotation,
-} from './featureAndRotationFactory';
+import { findAllRotations, findFinalRotation } from './findFinalRotation';
 import { RotationNode } from '@projectTypes/rotationTypes';
 
 const rotationTimes = {

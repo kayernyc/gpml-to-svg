@@ -34,7 +34,6 @@ describe('hexToRgb', () => {
     const hexColor = '#12345';
     const expectedRgb = [128, 128, 128];
     const result = hexToRgb(hexColor);
-    console.log({ expectedRgb });
     expect(result).toEqual(expectedRgb);
   });
 });

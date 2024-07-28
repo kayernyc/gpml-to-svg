@@ -6,7 +6,7 @@ describe('stepSingleChannel', () => {
     const color = 128;
     const step = 10;
     const numberOfFiles = 5;
-    const expected = [178, 168, 158, 148, 138];
+    const expected = [128, 118, 108, 98, 88];
     const result = stepSingleChannel(color, step, numberOfFiles);
     expect(result).toEqual(expected);
   });
@@ -40,11 +40,11 @@ describe('createRange', () => {
     const rgbColor = [128, 128, 128];
     const numberOfFiles = 5;
     const expected = [
-      [218, 218, 218],
-      [200, 200, 200],
-      [182, 182, 182],
-      [164, 164, 164],
-      [146, 146, 146],
+      [128, 128, 128],
+      [110, 110, 110],
+      [92, 92, 92],
+      [74, 74, 74],
+      [56, 56, 56],
     ];
     const result = createRange(rgbColor, numberOfFiles);
     expect(result).toEqual(expected);
@@ -68,14 +68,14 @@ describe('createRange', () => {
     const rgbColor = [250, 100, 128];
     const numberOfFiles = 8;
     const expected = [
-      [250, 188, 216],
-      [239, 177, 205],
-      [228, 166, 194],
-      [217, 155, 183],
-      [206, 144, 172],
-      [195, 133, 161],
-      [184, 122, 150],
-      [173, 111, 139],
+      [250, 100, 128],
+      [239, 89, 117],
+      [228, 78, 106],
+      [217, 67, 95],
+      [206, 56, 84],
+      [195, 45, 73],
+      [184, 34, 62],
+      [173, 23, 51],
     ];
     const result = createRange(rgbColor, numberOfFiles);
     expect(result).toEqual(expected);
