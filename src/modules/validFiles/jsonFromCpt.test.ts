@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findRgbColorCodeRule, jsonFromCpt } from './jsonFromCpt';
+import { findRgbColorCodeRule } from './jsonFromCpt';
 
 describe('findRgbColorCodeRule', () => {
   it('creates a simple rule from a source with tabs', () => {

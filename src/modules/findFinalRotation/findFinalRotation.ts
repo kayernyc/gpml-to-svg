@@ -1,7 +1,5 @@
-import parsePoints from '@modules/createSvg/parsePoints';
-import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import { FeatureCollection } from '@projectTypes/timeTypes';
 import { eulerToQuaternion } from '@modules/applyRotation/transformCoordinates';
+import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
 import Quaternion from 'quaternion';
 
 export function findAllRotations(
@@ -53,24 +51,4 @@ export function findFinalRotation(
   const rootQuat = eulerToQuaternion(root);
   const qTransform = currentBase.mul(rootQuat.conjugate());
   return qTransform;
-}
-
-export function featureAndRotationFactory(rotationTimes: RotationRecord) {
-  return function (feature: FeatureCollection, color: string) {
-    const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
-    const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
-
-    if (plateId) {
-      try {
-        const finalRotation: Quaternion = findFinalRotation(
-          rotationNode,
-          rotationTimes,
-        );
-
-        return parsePoints(feature, color, finalRotation);
-      } catch (e) {
-        console.log(e, feature.reconstructionPlateId);
-      }
-    }
-  };
 }

@@ -3,12 +3,12 @@ import { validateRgbColor } from '@utilities/validateRgbColor';
 import { promises as fs } from 'fs';
 import { stderr } from 'process';
 
-interface CptRampRule {
+export interface CptRampRule {
   anchor: number | 'B' | 'F' | 'N';
   color: RgbColorArrayType;
 }
 
-type CptRampRuleArray = CptRampRule[];
+export type CptRampRuleArray = CptRampRule[];
 
 function parseKey(key: string): number | 'B' | 'F' | 'N' {
   if (key === 'B' || key === 'F' || key === 'N') {
