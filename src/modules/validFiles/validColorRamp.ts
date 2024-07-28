@@ -15,8 +15,9 @@ function validCR(filePath: string) {
   }
 
   stdout.write(`Using ${filePath} as the color ramp.`);
-  jsonFromCpt(filePath);
+
   // process cpt and extract values
+  return jsonFromCpt(filePath);
 }
 
 async function selectCPT(candidateNames: string[]): Promise<string> {
@@ -34,7 +35,7 @@ async function selectCPT(candidateNames: string[]): Promise<string> {
 
 export async function validColorRamp(filePath: string) {
   if (isFile(filePath)) {
-    validCR(filePath);
+    return await validCR(filePath);
   } else if (isDirectory(filePath)) {
     console.log('DIR');
     const { cpt } = findFileTypeInDirectory(filePath, ['cpt']);
@@ -42,10 +43,10 @@ export async function validColorRamp(filePath: string) {
       console.warn('No valid color ramp provided');
       process.exit(1);
     } else if (cpt.length === 1) {
-      validCR(path.join(filePath, cpt[0]));
+      return await validCR(path.join(filePath, cpt[0]));
     } else {
       const selectedCPT = await selectCPT(cpt);
-      validCR(path.join(filePath, selectedCPT));
+      return await validCR(path.join(filePath, selectedCPT));
     }
   } else {
     console.warn('NO VALID CR FOUND');
