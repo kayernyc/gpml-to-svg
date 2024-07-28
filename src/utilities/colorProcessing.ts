@@ -1,5 +1,5 @@
 import { stderr } from 'process';
-import NAMED_COLORS from '../NAMED_COLORS';
+import NAMED_COLORS from '../constants/NAMED_COLORS';
 import { RgbColorArrayType } from '@modules/colorMap/createColorArray';
 
 const HexColorRegex = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;

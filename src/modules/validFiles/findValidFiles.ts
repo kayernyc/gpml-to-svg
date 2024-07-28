@@ -1,5 +1,5 @@
 import path from 'path';
-import { GPLATES_GPML_FILE_EXT } from 'GPLATES_CONSTANTS';
+import { GPLATES_GPML_FILE_EXT } from 'constants/GPLATES_CONSTANTS';
 import { readdirSync } from 'fs';
 import { isDirectory } from '@utilities/isDirectory';
 import { isFile } from '@utilities/isFile';

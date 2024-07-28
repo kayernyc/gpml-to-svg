@@ -1,7 +1,7 @@
 import path from 'path';
 import { isDirectory } from '@utilities/isDirectory';
 import { isFile } from '@utilities/isFile';
-import { COLOR_RAMP_FILE_EXT } from 'GPLATES_CONSTANTS';
+import { COLOR_RAMP_FILE_EXT } from 'constants/GPLATES_CONSTANTS';
 import { findFileTypeInDirectory } from '@utilities/findFileTypeInDirectory';
 import { stdout } from 'process';
 import { select } from '@inquirer/prompts';
