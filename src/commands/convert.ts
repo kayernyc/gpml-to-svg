@@ -1,15 +1,11 @@
-import { findValidFiles } from '@modules/validFiles/findValidFiles';
 import { OptionValues } from 'commander';
-
-import colorProcessing, { rgbToHex } from '@utilities/colorProcessing';
-import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile';
-import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
-import { findRotationTimes } from '@modules/parseRotation/findRotationTimes';
+import colorProcessing, {
+  colorValidation,
+  rgbToHex,
+} from '@utilities/colorProcessing';
 import { convertFileToGroup } from '../modules/convert/convertFileToGroup';
-import { validDestination } from '@modules/validDestination/validDestination';
 import createSvg from '@modules/createSvg/createSvg';
-import { processedFileName } from '@utilities/processedFileName';
-import { defineDestFileName } from '@modules/defineDestFileName/defineDestFileName';
+
 import {
   createColorArray,
   RgbColorArrayType,
@@ -25,6 +21,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
     await validateRequiredFileProcessingOptions(options, filepaths);
 
   const color = colorProcessing(options.color.toLowerCase());
+  const borderColor = colorValidation(options.borderColor);
   const { multiColor } = options;
 
   const timeInt = parseInt(options.time);
@@ -58,5 +55,5 @@ export async function convert(filepaths: string[], options: OptionValues) {
     )
     .join('\n');
 
-  createSvg(finalElements, destination, userFileName);
+  createSvg(finalElements, destination, userFileName, borderColor);
 }

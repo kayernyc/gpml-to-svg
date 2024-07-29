@@ -14,6 +14,9 @@ export const MULTI_COLOR_DECLARATION = '-mc, --multi-color';
 export const MULTI_COLOR_DESCRIPTION =
   'generate groups colored with variations on fill color';
 
+export const BORDER_COLOR_DECLARATION = '-bc, --border-color <string>';
+export const BORDER_COLOR_DESCRIPTION = 'apply a color to the svg bounding box';
+
 export const FILL_COLOR_DECLARATION = '-c, --color <string>';
-export const FILL_COLOR_DESCRIPTION = 'fill color';
+export const FILL_COLOR_DESCRIPTION = 'base fill color';
 export const FILL_COLOR_DEFAULT = 'gray';

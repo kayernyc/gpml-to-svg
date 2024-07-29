@@ -44,6 +44,25 @@ export function rgbToHex(rgbNumber: [number, number, number]): string {
   return result;
 }
 
+export function colorValidation(color: string): string {
+  if (color.length < 1) {
+    return '';
+  }
+
+  if (NAMED_COLORS[color] !== undefined) {
+    return color;
+  }
+
+  if (!HexColorRegex.test(color) && !shorthandRegex.test(color)) {
+    stderr.write(`Color ${color} is not valid. Defaulting to no color.`);
+    ('');
+  } else {
+    return color.charAt(0) === '#' ? color : `#${color}`;
+  }
+
+  return '';
+}
+
 export default function colorProcessing(color: string): RgbColorArrayType {
   if (NAMED_COLORS[color] !== undefined) {
     return NAMED_COLORS[color] as RgbColorArrayType;
