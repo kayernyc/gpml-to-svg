@@ -15,7 +15,7 @@ export interface ValidFilesDictionary {
 export function findValidFiles(
   filepaths: string[],
 ): ValidFilesDictionary | undefined {
-  const { files, directories, rotations, userFileNameCandidates } =
+  let { files, directories, rotations, userFileNameCandidates } =
     filepaths.reduce(
       (acc, proposedPath) => {
         if (isDirectory(proposedPath)) {
@@ -60,6 +60,8 @@ export function findValidFiles(
       },
     );
 
+  directories = Array.from(new Set(directories));
+
   if (!directories.length && !files.length) {
     console.log('nothing to convert');
   }
@@ -76,11 +78,11 @@ export function findValidFiles(
     .filter((userName) => !!userName);
 
   if (files.length) {
-    const filesSet = Array.from(new Set(files));
-    const rotationSet = Array.from(new Set(rotations));
+    files = Array.from(new Set(files));
+    rotations = Array.from(new Set(rotations));
     return {
-      files: filesSet,
-      rotations: rotationSet,
+      files,
+      rotations,
       directories,
       userFileNameCandidates: userFileNameCandidatesSet,
     };

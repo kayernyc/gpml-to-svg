@@ -14,43 +14,20 @@ import {
   createColorArray,
   RgbColorArrayType,
 } from '@modules/colorMap/createColorArray';
+import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
 
 const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
 ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 
 export async function convert(filepaths: string[], options: OptionValues) {
-  // process options
-  const { destination } = options;
-
-  if (!validDestination(destination)) {
-    return 1;
-  }
+  const { destination, files, rotationTimes, userFileName } =
+    await validateRequiredFileProcessingOptions(options, filepaths);
 
   const color = colorProcessing(options.color.toLowerCase());
   const { multiColor } = options;
-  const validFiles = findValidFiles(filepaths);
+
   const timeInt = parseInt(options.time);
-
-  if (validFiles === undefined) {
-    throw Error('No valid files found.');
-  }
-
-  const { files, rotations, userFileNameCandidates } = validFiles;
-  const rotationFilePath = findValidRotationFile(
-    options.rotationFile,
-    rotations,
-  );
-
-  let { fileName: userFileName } = options;
-  if (userFileName) {
-    userFileName = processedFileName(userFileName);
-  } else {
-    userFileName = await defineDestFileName(userFileNameCandidates);
-  }
-
-  const rotationDict = parseRotationFile(rotationFilePath);
-  const rotationTimes = findRotationTimes(rotationDict, timeInt);
 
   const colorMap: RgbColorArrayType[] = createColorArray(
     color,
