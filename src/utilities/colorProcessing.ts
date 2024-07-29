@@ -44,22 +44,6 @@ export function rgbToHex(rgbNumber: [number, number, number]): string {
   return result;
 }
 
-export default function colorProcessing(color: string): RgbColorArrayType {
-  if (NAMED_COLORS[color] !== undefined) {
-    return NAMED_COLORS[color] as RgbColorArrayType;
-  }
-
-  if (HexColorRegex.test(color)) {
-    if (color.charAt(0) !== '#') {
-      color = `#${color}`;
-    }
-    return hexToRgb(color) as RgbColorArrayType;
-  }
-
-  stderr.write('Invalid color. Defaulting to gray.');
-  return [128, 128, 128];
-}
-
 export function colorValidation(color: string): string {
   if (color.length < 1) {
     return '';
@@ -77,4 +61,20 @@ export function colorValidation(color: string): string {
   }
 
   return '';
+}
+
+export default function colorProcessing(color: string): RgbColorArrayType {
+  if (NAMED_COLORS[color] !== undefined) {
+    return NAMED_COLORS[color] as RgbColorArrayType;
+  }
+
+  if (HexColorRegex.test(color)) {
+    if (color.charAt(0) !== '#') {
+      color = `#${color}`;
+    }
+    return hexToRgb(color) as RgbColorArrayType;
+  }
+
+  stderr.write('Invalid color. Defaulting to gray.');
+  return [128, 128, 128];
 }

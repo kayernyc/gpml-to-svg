@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { hexToRgb, rgbToHex } from '../utilities/colorProcessing';
+import {
+  colorValidation,
+  hexToRgb,
+  rgbToHex,
+} from '../utilities/colorProcessing';
 
 describe('hexToRgb', () => {
   it('should convert a valid 6-digit hex color to RGB', () => {
@@ -65,5 +69,43 @@ describe('rgbToHex', () => {
     const expectedHex = `#0000ff`;
     const result = rgbToHex(rgbColor);
     expect(result).toEqual(expectedHex);
+  });
+});
+
+describe('colorValidation', () => {
+  it('should return the input color if it is a valid hex color', () => {
+    const color = '#FF0000';
+    const result = colorValidation(color);
+    expect(result).toEqual(color);
+  });
+
+  it('should return the input color if it is a valid short hex color', () => {
+    const color = '#F00';
+    const result = colorValidation(color);
+    expect(result).toEqual(color);
+  });
+
+  it('should append the hash if the hex is a valid color.', () => {
+    const color = '#FF0000';
+    const result = colorValidation('FF0000');
+    expect(result).toEqual(color);
+  });
+
+  it('should return the input color if it is a valid named color', () => {
+    const color = 'red';
+    const result = colorValidation(color);
+    expect(result).toEqual(color);
+  });
+
+  it('should return an empty string if the input color is an invalid hex color', () => {
+    const color = '#12345';
+    const result = colorValidation(color);
+    expect(result).toEqual('');
+  });
+
+  it('should return null if the input color is not a valid hex or named color', () => {
+    const color = 'invalidColor';
+    const result = colorValidation(color);
+    expect(result).toEqual('');
   });
 });

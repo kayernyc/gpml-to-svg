@@ -7,7 +7,6 @@ import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile
 import { processedFileName } from '@utilities/processedFileName';
 import { OptionValues } from 'commander';
 import { readdirSync } from 'fs';
-import { GPLATES_GPML_FILE_EXT } from 'constants/GPLATES_CONSTANTS';
 import path from 'path';
 
 export async function validateRequiredFileProcessingOptions(
