@@ -2,6 +2,8 @@ import { colorGradient } from '@commands/colorGradient';
 import { convert } from '@commands/convert';
 import { Command } from 'commander';
 import {
+  BORDER_COLOR_DECLARATION,
+  BORDER_COLOR_DESCRIPTION,
   DESTINATION_DECLARATION,
   DESTINATION_DESCRIPTION,
   FILL_COLOR_DECLARATION,
@@ -38,6 +40,7 @@ program
   .option(ROTATION_FILE_DECLARATION, ROTATION_FILE_DESCRIPTION)
   .option(GENERATED_FILE_NAME_DECLARATION, GENERATED_FILE_NAME_DESCRIPTION)
   .option(MULTI_COLOR_DECLARATION, MULTI_COLOR_DESCRIPTION)
+  .option(BORDER_COLOR_DECLARATION, BORDER_COLOR_DESCRIPTION)
   .argument('<filepaths...>')
   .action(async (filepaths, options) => {
     convert(filepaths, options);
@@ -53,6 +56,7 @@ program
   )
   .option(ROTATION_FILE_DECLARATION, ROTATION_FILE_DESCRIPTION)
   .option(GENERATED_FILE_NAME_DECLARATION, GENERATED_FILE_NAME_DESCRIPTION)
+  .option(BORDER_COLOR_DECLARATION, BORDER_COLOR_DESCRIPTION)
   .option('-f, --file-path <string>', 'file to color with a gradient')
   .action(async (options) => {
     colorGradient(options);
