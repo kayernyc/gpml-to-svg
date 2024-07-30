@@ -5,7 +5,6 @@ import colorProcessing, {
 } from '@utilities/colorProcessing';
 import { convertFileToGroup } from '../modules/convert/convertFileToGroup';
 import createSvg from '@modules/createSvg/createSvg';
-import ansis from 'ansis';
 
 import {
   createColorArray,
@@ -18,7 +17,6 @@ const isFulfilled = <T>(
 ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 
 export async function convert(filepaths: string[], options: OptionValues) {
-  console.log(ansis.green('Success!'));
   const { destination, files, rotationTimes, userFileName } =
     await validateRequiredFileProcessingOptions(options, filepaths);
 
