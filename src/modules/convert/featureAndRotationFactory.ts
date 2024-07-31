@@ -1,25 +1,25 @@
-import parsePoints from '@modules/createSvg/parsePoints';
-import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import { FeatureCollection } from '@projectTypes/timeTypes';
-import Quaternion from 'quaternion';
-import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
+import parsePoints from "@modules/createSvg/parsePoints";
+import { findFinalRotation } from "@modules/findFinalRotation/findFinalRotation";
+import type { RotationNode, RotationRecord } from "@projectTypes/rotationTypes";
+import type { FeatureCollection } from "@projectTypes/timeTypes";
+import type Quaternion from "quaternion";
 
 export function featureAndRotationFactory(rotationTimes: RotationRecord) {
-  return function (feature: FeatureCollection, color: string) {
-    const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
-    const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
+	return (feature: FeatureCollection, color: string) => {
+		const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
+		const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
 
-    if (plateId) {
-      try {
-        const finalRotation: Quaternion = findFinalRotation(
-          rotationNode,
-          rotationTimes,
-        );
+		if (plateId) {
+			try {
+				const finalRotation: Quaternion = findFinalRotation(
+					rotationNode,
+					rotationTimes,
+				);
 
-        return parsePoints(feature, color, finalRotation);
-      } catch (e) {
-        console.log(e, feature.reconstructionPlateId);
-      }
-    }
-  };
+				return parsePoints(feature, color, finalRotation);
+			} catch (e) {
+				console.log(e, feature.reconstructionPlateId);
+			}
+		}
+	};
 }
