@@ -1,10 +1,10 @@
-import { ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
+import { type ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
 import errorProcessing from '@utilities/errorProcessing';
 import {
   cartesianToLatLong,
   latLonToCartesian,
 } from '@modules/applyRotation/transformCoordinates';
-import Quaternion from 'quaternion';
+import type Quaternion from 'quaternion';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
@@ -82,11 +82,11 @@ function createPointsArray(
   coordinateData.forEach((dataPoint, index) => {
     // only work with complete pairs
     if (index % 2 === 1) {
-      const incomingLon = parseFloat(dataPoint);
+      const incomingLon = Number.parseFloat(dataPoint);
       if (isNaN(incomingLon)) {
         console.warn({ dataFloat: incomingLon }, { dataPoint }, 'is NaN');
       } else {
-        const incomingLat = parseFloat(coordinateData[index - 1]);
+        const incomingLat = Number.parseFloat(coordinateData[index - 1]);
         const point = latLonToCartesian(incomingLat, incomingLon);
 
         const qConjugate = finalRotation.conjugate();
@@ -211,7 +211,7 @@ function parsePoints(
     let nodes = '';
     let currentStr = '';
 
-    for (let result of results) {
+    for (const result of results) {
       const currentPointArrays = createPointsArray(result, finalRotation);
 
       if (featureType === 'LineString' || featureType === 'OrientableCurve') {

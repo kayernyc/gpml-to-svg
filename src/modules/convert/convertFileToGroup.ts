@@ -1,9 +1,9 @@
 import { parseToJson } from '@modules/findNodes/parseToJson';
 import { filterForTime } from '@modules/findNodes/filterForTime';
 
-import { FeatureCollection } from '@projectTypes/timeTypes';
+import type { FeatureCollection } from '@projectTypes/timeTypes';
 import { featureAndRotationFactory } from '@modules/convert/featureAndRotationFactory';
-import { RotationRecord } from '@projectTypes/rotationTypes';
+import type { RotationRecord } from '@projectTypes/rotationTypes';
 import path from 'path';
 import { processedFileName } from '@utilities/processedFileName';
 

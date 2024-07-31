@@ -16,7 +16,7 @@ export function processDestinationFileName(
   const [destFilePath, destFileName] = findPathAndBase(destinationPath);
   const [_, sourceFileName] = findPathAndBase(sourcePath);
 
-  let destinationFileName =
+  const destinationFileName =
     processedFileName(destFileName) || processedFileName(sourceFileName);
 
   if (destinationFileName) {

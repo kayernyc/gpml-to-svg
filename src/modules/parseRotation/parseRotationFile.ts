@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { RotationDict } from '@projectTypes/rotationTypes';
+import type { RotationDict } from '@projectTypes/rotationTypes';
 
 export function reduceFileArray(rotationFileArray: string[]) {
   const accDict: RotationDict = {};
@@ -35,11 +35,11 @@ export function reduceFileArray(rotationFileArray: string[]) {
       acc[plateId] = {};
     }
 
-    acc[plateId][parseFloat(time)] = {
-      lat_of_euler_pole: parseFloat(lat_of_euler_pole),
-      lon_of_euler_pole: parseFloat(lon_of_euler_pole),
-      rotation_angle: parseFloat(rotation_angle),
-      relativePlateId: parseInt(relativePlateId),
+    acc[plateId][Number.parseFloat(time)] = {
+      lat_of_euler_pole: Number.parseFloat(lat_of_euler_pole),
+      lon_of_euler_pole: Number.parseFloat(lon_of_euler_pole),
+      rotation_angle: Number.parseFloat(rotation_angle),
+      relativePlateId: Number.parseInt(relativePlateId),
     };
 
     return acc;

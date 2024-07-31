@@ -5,7 +5,7 @@ import { COLOR_RAMP_FILE_EXT } from 'constants/GPLATES_CONSTANTS';
 import { findFileTypeInDirectory } from '@utilities/findFileTypeInDirectory';
 import { stdout } from 'process';
 import { select } from '@inquirer/prompts';
-import { Choice } from '@projectTypes/Choice';
+import type { Choice } from '@projectTypes/Choice';
 import { jsonFromCpt } from './jsonFromCpt';
 
 function validCR(filePath: string) {

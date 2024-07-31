@@ -5,9 +5,9 @@ import { validDestination } from '@modules/validDestination/validDestination';
 import { findValidFiles } from '@modules/validFiles/findValidFiles';
 import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile';
 import { processedFileName } from '@utilities/processedFileName';
-import { OptionValues } from 'commander';
-import { readdirSync } from 'fs';
-import path from 'path';
+import type { OptionValues } from 'commander';
+import { readdirSync } from 'node:fs';
+import path from 'node:path';
 
 export async function validateRequiredFileProcessingOptions(
   options: OptionValues,
@@ -16,13 +16,13 @@ export async function validateRequiredFileProcessingOptions(
   const { destination, filePath } = options;
 
   if (!validDestination(destination)) {
-    throw Error(`No valid destination provided.`);
+    throw Error('No valid destination provided.');
   }
 
   const fileCandidates: string[] =
     filepaths && filepaths?.length > 0 ? filepaths : [filePath];
   if (fileCandidates.length === 0) {
-    throw Error(`No valid file names provided.`);
+    throw Error('No valid file names provided.');
   }
 
   const validFiles = findValidFiles(fileCandidates);
@@ -34,7 +34,7 @@ export async function validateRequiredFileProcessingOptions(
     throw Error(message);
   }
 
-  const timeInt = parseInt(options.time);
+  const timeInt = Number.parseInt(options.time);
   const { files, rotations, userFileNameCandidates, directories } = validFiles;
 
   let { fileName: userFileName } = options;
@@ -45,23 +45,21 @@ export async function validateRequiredFileProcessingOptions(
   }
 
   if (!options.rotationFile && !rotations.length && directories.length) {
-    const proposedRotations = directories
-      .map((dirFilepath: string) => {
-        const allFilesInDir = readdirSync(dirFilepath);
-        const rotationArray: string[] = [];
-        allFilesInDir.forEach((candidatePath) => {
-          if (path.extname(candidatePath) === '.rot') {
-            rotationArray.push(path.join(dirFilepath, candidatePath));
-          }
-        });
-        return rotationArray;
-      })
-      .flat();
+    const proposedRotations = directories.flatMap((dirFilepath: string) => {
+      const allFilesInDir = readdirSync(dirFilepath);
+      const rotationArray: string[] = [];
+      for (const candidatePath of allFilesInDir) {
+        if (path.extname(candidatePath) === '.rot') {
+          rotationArray.push(path.join(dirFilepath, candidatePath));
+        }
+      }
+      return rotationArray;
+    });
 
     if (proposedRotations.length) {
-      proposedRotations.forEach((candidatePath: string) =>
-        rotations.push(candidatePath),
-      );
+      for (const candidatePath of proposedRotations) {
+        rotations.push(candidatePath);
+      }
     }
   }
 

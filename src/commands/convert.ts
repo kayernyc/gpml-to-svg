@@ -1,4 +1,4 @@
-import { OptionValues } from 'commander';
+import type { OptionValues } from 'commander';
 import colorProcessing, {
   colorValidation,
   rgbToHex,
@@ -8,7 +8,7 @@ import createSvg from '@modules/createSvg/createSvg';
 
 import {
   createColorArray,
-  RgbColorArrayType,
+  type RgbColorArrayType,
 } from '@modules/colorMap/createColorArray';
 import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
 
@@ -24,7 +24,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
   const borderColor = colorValidation(options.borderColor);
   const { multiColor } = options;
 
-  const timeInt = parseInt(options.time);
+  const timeInt = Number.parseInt(options.time);
 
   const colorMap: RgbColorArrayType[] = createColorArray(
     color,
@@ -46,7 +46,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
     }),
   );
 
-  let finalElements: string = processedFiles
+  const finalElements: string = processedFiles
     .filter(isFulfilled)
     .map((record) => record.value)
     .filter(

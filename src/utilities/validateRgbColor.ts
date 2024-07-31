@@ -1,4 +1,4 @@
-import { RgbColorArrayType } from '@modules/colorMap/createColorArray';
+import type { RgbColorArrayType } from '@modules/colorMap/createColorArray';
 
 export function validateRgbColor(colorArray: RgbColorArrayType) {
   colorArray.forEach((colorNumber: number) => {

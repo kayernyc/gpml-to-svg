@@ -1,6 +1,6 @@
 import { eulerToQuaternion } from '@modules/applyRotation/transformCoordinates';
-import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import Quaternion from 'quaternion';
+import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
+import type Quaternion from 'quaternion';
 
 export function findAllRotations(
   rotationNode: RotationNode,

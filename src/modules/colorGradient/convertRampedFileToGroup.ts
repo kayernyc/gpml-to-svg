@@ -1,11 +1,11 @@
 import { parseToJson } from '@modules/findNodes/parseToJson';
 import { filterForTime } from '@modules/findNodes/filterForTime';
 
-import { FeatureCollection } from '@projectTypes/timeTypes';
-import { RotationRecord } from '@projectTypes/rotationTypes';
+import type { FeatureCollection } from '@projectTypes/timeTypes';
+import type { RotationRecord } from '@projectTypes/rotationTypes';
 import path from 'path';
 import { processedFileName } from '@utilities/processedFileName';
-import { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
+import type { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
 import { featureColorAndRotationFactory } from './featureColorAndRotationFactory';
 
 export async function convertRampedFileToGroup(

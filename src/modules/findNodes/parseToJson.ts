@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import { XMLParser } from 'fast-xml-parser';
 import errorProcessing from '@utilities/errorProcessing';
-import { FeatureCollection } from '@projectTypes/timeTypes';
+import type { FeatureCollection } from '@projectTypes/timeTypes';
 
 export async function parseToJson(
   sourcePath: string,

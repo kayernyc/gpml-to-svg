@@ -1,5 +1,5 @@
 export type EulerParamType = [number, number, number];
-import { EulerPole } from '@projectTypes/rotationTypes';
+import type { EulerPole } from '@projectTypes/rotationTypes';
 import Quaternion from 'quaternion';
 
 /*  Written with the help of ChatGPT, assuming this

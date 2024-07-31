@@ -1,16 +1,16 @@
 import parsePoints from '@modules/createSvg/parsePoints';
-import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import { FeatureCollection, TimeInstant } from '@projectTypes/timeTypes';
-import Quaternion from 'quaternion';
+import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
+import type { FeatureCollection, TimeInstant } from '@projectTypes/timeTypes';
+import type Quaternion from 'quaternion';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
-import { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
+import type { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
 import { gradedStepFactory } from './gradedStepFactory';
 import { rgbToHex } from '@utilities/colorProcessing';
 
 function getTimeFromTimeInstant(time: TimeInstant): number {
   const value = time.timePosition;
   if (typeof value === 'string') {
-    return parseInt(value);
+    return Number.parseInt(value);
   }
 
   return value as unknown as number;
@@ -23,7 +23,7 @@ export function featureColorAndRotationFactory(
 ) {
   const gradedColor = gradedStepFactory(colorRamp);
 
-  return function (feature: FeatureCollection) {
+  return (feature: FeatureCollection) => {
     const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
     const age =
       getTimeFromTimeInstant(feature.validTime.TimePeriod.begin.TimeInstant) -

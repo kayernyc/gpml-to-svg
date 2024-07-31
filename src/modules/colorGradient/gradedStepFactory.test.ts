@@ -2,10 +2,10 @@ import {
   findColorInRange,
   findOutOfRangeValues,
   gradedStepFactory,
-  RampDictionaryType,
+  type RampDictionaryType,
 } from '@modules/colorGradient/gradedStepFactory';
 import { findNumericRangeValues } from '@modules/colorGradient/gradedStepFactory';
-import { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
+import type { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
 import { describe, expect, it } from 'vitest';
 
 describe('findOutOfRangeValues', () => {
@@ -58,7 +58,7 @@ describe('findNumericRangeValues', () => {
     const result = findNumericRangeValues(colorRamp);
     const expected = {
       highBoundary: 0,
-      lowBoundary: Infinity,
+      lowBoundary: Number.POSITIVE_INFINITY,
       rampDictionary: {},
       rangeArray: [],
     };

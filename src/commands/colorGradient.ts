@@ -3,16 +3,16 @@ import createSvg from '@modules/createSvg/createSvg';
 import { validColorRamp } from '@modules/validFiles/validColorRamp';
 import { colorValidation } from '@utilities/colorProcessing';
 import ansis from 'ansis';
-import { OptionValues } from 'commander';
+import type { OptionValues } from 'commander';
 import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
-import { stderr } from 'process';
+import { stderr } from 'node:process';
 
 export async function colorGradient(options: OptionValues) {
   const { destination, files, rotationTimes, userFileName } =
     await validateRequiredFileProcessingOptions(options);
 
   const borderColor = colorValidation(options.borderColor);
-  const timeInt = parseInt(options.time);
+  const timeInt = Number.parseInt(options.time);
 
   const ramp = await validColorRamp(options.colorRamp);
   if (!ramp) {

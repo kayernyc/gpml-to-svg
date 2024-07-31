@@ -4,7 +4,7 @@ export function findValidRotationFile(
   optionRotationFile?: string,
   rotations?: string[],
 ) {
-  let rotationFile: string = '';
+  let rotationFile = '';
 
   const userRotationFile = validRotationFile(optionRotationFile || '');
   if (userRotationFile) {

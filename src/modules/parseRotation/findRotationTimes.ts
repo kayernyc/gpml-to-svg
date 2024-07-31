@@ -1,11 +1,11 @@
-import {
+import type {
   RotationDict,
   RotationNode,
   RotationRecord,
 } from '@projectTypes/rotationTypes';
 
 function findTimePair(plateObject: RotationRecord, time: number) {
-  const times = Object.keys(plateObject).map((key) => parseFloat(key));
+  const times = Object.keys(plateObject).map((key) => Number.parseFloat(key));
   const sortedTimes = times.sort((a, b) => a - b);
 
   for (let i = 0; i < sortedTimes.length; i++) {
@@ -67,7 +67,7 @@ export function findRelativeTimeRotationParams(
 
 export function findRotationTimes(rotationDict: RotationDict, time: number) {
   const times = Object.keys(rotationDict).reduce((acc, plateId) => {
-    const plateIdInt = parseInt(plateId, 10);
+    const plateIdInt = Number.parseInt(plateId, 10);
     const plateObject: RotationRecord = rotationDict[plateId];
 
     if (Object.keys(plateObject).length < 2) {

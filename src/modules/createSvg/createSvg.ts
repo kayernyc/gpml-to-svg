@@ -1,7 +1,7 @@
-import { promises as fs } from 'fs';
+import { promises as fs } from 'node:fs';
 import errorProcessing from '@utilities/errorProcessing';
 import ansis from 'ansis';
-import { stderr } from 'process';
+import { stderr } from 'node:process';
 
 const svgWidth = 3600;
 const svgHeight = 1800;
@@ -19,8 +19,10 @@ async function createSvg(
   const svgBorder = `<rect width="${svgWidth}" height="${svgHeight}" style="fill:none;${borderColor.length > 0 ? `stroke-width:3;stroke:${borderColor};` : ''}" />`;
   const content = `${svgHeader}${svgBorder}${featureString}${svgFooter}`;
 
+  let finalFileName = fileName;
+
   if (fileName.slice(-4) !== '.svg') {
-    fileName += '.svg';
+    finalFileName += '.svg';
   }
 
   await fs

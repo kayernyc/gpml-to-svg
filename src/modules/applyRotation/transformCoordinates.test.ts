@@ -1,5 +1,5 @@
 import { describe, expect, it, test } from 'vitest';
-import Quaternion from 'quaternion';
+import type Quaternion from 'quaternion';
 
 import {
   eulerToQuaternion,

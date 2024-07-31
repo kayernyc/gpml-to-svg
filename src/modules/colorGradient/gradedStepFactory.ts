@@ -1,5 +1,5 @@
-import { RgbColorArrayType } from '@modules/colorMap/createColorArray';
-import { CptRampRule, CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
+import type { RgbColorArrayType } from '@modules/colorMap/createColorArray';
+import type { CptRampRule, CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
 
 export type RampDictionaryType = { [key: number]: RgbColorArrayType };
 
@@ -28,7 +28,7 @@ export function findOutOfRangeValues(colorRamp: CptRampRuleArray) {
 }
 
 export function findNumericRangeValues(colorRamp: CptRampRuleArray) {
-  let lowBoundary = Infinity;
+  let lowBoundary = Number.POSITIVE_INFINITY;
   let highBoundary = 0;
 
   let rangeArray: number[] = [];
@@ -88,7 +88,7 @@ export function findColorInRange(
     },
     {
       lowKey: 0,
-      highKey: Infinity,
+      highKey: Number.POSITIVE_INFINITY,
     },
   );
 
@@ -111,7 +111,7 @@ export function gradedStepFactory(colorRamp: CptRampRuleArray) {
   const { highBoundary, lowBoundary, rampDictionary, rangeArray } =
     findNumericRangeValues(colorRamp);
 
-  return function (age: number) {
+  return (age: number) => {
     switch (true) {
       case age < 0:
       case isNaN(age):

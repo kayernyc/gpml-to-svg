@@ -1,4 +1,4 @@
-import { FeatureCollection, TimePeriod } from '@projectTypes/timeTypes';
+import type { FeatureCollection, TimePeriod } from '@projectTypes/timeTypes';
 
 function findTimePeriod(validTime: TimePeriod): [number, number] {
   const returnValue = [
@@ -19,7 +19,7 @@ export function filterForTime(
   time: number,
 ): FeatureCollection[] {
   const filteredFeatures = sourceJsonArray
-    .map((feature) => {
+    .flatMap((feature) => {
       const keys = Object.keys(feature);
       return keys.map((key) => {
         const value = feature[key] as FeatureCollection;
@@ -27,7 +27,6 @@ export function filterForTime(
         return value;
       });
     })
-    .flat()
     .filter((feature: FeatureCollection) => {
       const [beginTime, endTime] = findTimePeriod(feature.validTime.TimePeriod);
       // must have existed by the beginning time

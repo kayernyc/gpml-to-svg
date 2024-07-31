@@ -1,11 +1,11 @@
 import parsePoints from '@modules/createSvg/parsePoints';
-import { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import { FeatureCollection } from '@projectTypes/timeTypes';
-import Quaternion from 'quaternion';
+import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
+import type { FeatureCollection } from '@projectTypes/timeTypes';
+import type Quaternion from 'quaternion';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
 
 export function featureAndRotationFactory(rotationTimes: RotationRecord) {
-  return function (feature: FeatureCollection, color: string) {
+  return (feature: FeatureCollection, color: string) => {
     const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
     const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
 

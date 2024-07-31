@@ -1,8 +1,8 @@
-import { RgbColorArrayType } from '@modules/colorMap/createColorArray';
+import type { RgbColorArrayType } from '@modules/colorMap/createColorArray';
 import { validateRgbColor } from '@utilities/validateRgbColor';
 import ansis from 'ansis';
-import { promises as fs } from 'fs';
-import { stderr } from 'process';
+import { promises as fs } from 'node:fs';
+import { stderr } from 'node:process';
 
 export interface CptRampRule {
   anchor: number | 'B' | 'F' | 'N';
@@ -16,16 +16,16 @@ function parseKey(key: string): number | 'B' | 'F' | 'N' {
     return key;
   }
 
-  if (isNaN(parseInt(key))) {
+  if (Number.isNaN(Number.parseInt(key))) {
     process.exit(1);
   } else {
-    return parseInt(key);
+    return Number.parseInt(key);
   }
 }
 
 export function findRgbColorCodeRule(line: string): CptRampRuleArray {
-  let charArray = line.split('');
-  let numberArray = [];
+  const charArray = line.split('');
+  const numberArray = [];
   let currentNumStr = '';
 
   while (charArray.length > 0) {
@@ -40,7 +40,7 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
       continue;
     }
 
-    if (isNaN(parseInt(currentChar))) {
+    if (Number.isNaN(Number.parseInt(currentChar))) {
       if (currentNumStr.length > 0) {
         numberArray.push(currentNumStr);
       }
@@ -67,12 +67,12 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
 
   for (let i = 0; i < numberArray.length; i += 4) {
     try {
-      let currentRule: CptRampRule = {
+      const currentRule: CptRampRule = {
         anchor: parseKey(numberArray[i]), // parseInt(numberArray[i]),
         color: [
-          parseInt(numberArray[i + 1]),
-          parseInt(numberArray[i + 2]),
-          parseInt(numberArray[i + 3]),
+          Number.parseInt(numberArray[i + 1]),
+          Number.parseInt(numberArray[i + 2]),
+          Number.parseInt(numberArray[i + 3]),
         ],
       };
 
@@ -89,7 +89,7 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
 }
 
 export async function jsonFromCpt(filePath: string) {
-  let data = await fs.readFile(filePath, 'utf8');
+  const data = await fs.readFile(filePath, 'utf8');
   return data
     .split('\n')
     .map((line) => line.trim())
@@ -101,9 +101,9 @@ export async function jsonFromCpt(filePath: string) {
         case 'N':
           acc.push(findRgbColorCodeRule(line)[0]);
           return acc;
-          break;
 
         default:
+          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
           return [...acc, ...findRgbColorCodeRule(line)];
       }
     }, [] as CptRampRuleArray);
