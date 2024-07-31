@@ -1,5 +1,6 @@
 import { RgbColorArrayType } from '@modules/colorMap/createColorArray';
 import { validateRgbColor } from '@utilities/validateRgbColor';
+import ansis from 'ansis';
 import { promises as fs } from 'fs';
 import { stderr } from 'process';
 
@@ -58,7 +59,7 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
   }
 
   if (numberArray.length % 4 !== 0) {
-    stderr.write('Invalid CPT');
+    stderr.write(ansis.red.bold('Invalid CPT'));
     process.exit(1);
   }
 

@@ -1,5 +1,7 @@
 import { promises as fs } from 'fs';
 import errorProcessing from '@utilities/errorProcessing';
+import ansis from 'ansis';
+import { stderr } from 'process';
 
 const svgWidth = 3600;
 const svgHeight = 1800;
@@ -23,7 +25,11 @@ async function createSvg(
 
   await fs
     .mkdir(destPath, { recursive: true })
-    .then(() => console.log(`Directory '${destPath}' created.`))
+    .then(() =>
+      stderr.write(
+        ansis.green(`\nFile "${fileName}" written to '${destPath}'.\n`),
+      ),
+    ) //console.log()
     .catch((err) => console.error(`Error creating directory: ${err.message}`));
   try {
     fs.writeFile(`${destPath}/${fileName}`, content);
