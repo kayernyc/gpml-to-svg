@@ -1,7 +1,8 @@
 import { convertRampedFileToGroup } from '@modules/colorGradient/convertRampedFileToGroup';
 import createSvg from '@modules/createSvg/createSvg';
 import { validColorRamp } from '@modules/validFiles/validColorRamp';
-import colorProcessing, { colorValidation } from '@utilities/colorProcessing';
+import { colorValidation } from '@utilities/colorProcessing';
+import ansis from 'ansis';
 import { OptionValues } from 'commander';
 import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
 import { stderr } from 'process';
@@ -15,7 +16,7 @@ export async function colorGradient(options: OptionValues) {
 
   const ramp = await validColorRamp(options.colorRamp);
   if (!ramp) {
-    stderr.write('No valid cpt file found. Exiting.');
+    stderr.write(ansis.red('No valid cpt file found. Exiting.'));
     process.exit(2);
   }
 
