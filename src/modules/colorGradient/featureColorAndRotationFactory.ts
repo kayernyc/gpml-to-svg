@@ -1,49 +1,49 @@
-import parsePoints from '@modules/createSvg/parsePoints';
-import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import type { FeatureCollection, TimeInstant } from '@projectTypes/timeTypes';
-import type Quaternion from 'quaternion';
-import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
-import type { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
-import { gradedStepFactory } from './gradedStepFactory';
-import { rgbToHex } from '@utilities/colorProcessing';
+import parsePoints from "@modules/createSvg/parsePoints";
+import { findFinalRotation } from "@modules/findFinalRotation/findFinalRotation";
+import type { CptRampRuleArray } from "@modules/validFiles/jsonFromCpt";
+import type { RotationNode, RotationRecord } from "@projectTypes/rotationTypes";
+import type { FeatureCollection, TimeInstant } from "@projectTypes/timeTypes";
+import { rgbToHex } from "@utilities/colorProcessing";
+import type Quaternion from "quaternion";
+import { gradedStepFactory } from "./gradedStepFactory";
 
 function getTimeFromTimeInstant(time: TimeInstant): number {
-  const value = time.timePosition;
-  if (typeof value === 'string') {
-    return Number.parseInt(value);
-  }
+	const value = time.timePosition;
+	if (typeof value === "string") {
+		return Number.parseInt(value);
+	}
 
-  return value as unknown as number;
+	return value as unknown as number;
 }
 
 export function featureColorAndRotationFactory(
-  colorRamp: CptRampRuleArray,
-  rotationTimes: RotationRecord,
-  targetTime: number,
+	colorRamp: CptRampRuleArray,
+	rotationTimes: RotationRecord,
+	targetTime: number,
 ) {
-  const gradedColor = gradedStepFactory(colorRamp);
+	const gradedColor = gradedStepFactory(colorRamp);
 
-  return (feature: FeatureCollection) => {
-    const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
-    const age =
-      getTimeFromTimeInstant(feature.validTime.TimePeriod.begin.TimeInstant) -
-      targetTime;
+	return (feature: FeatureCollection) => {
+		const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
+		const age =
+			getTimeFromTimeInstant(feature.validTime.TimePeriod.begin.TimeInstant) -
+			targetTime;
 
-    const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
+		const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
 
-    const hexColor = rgbToHex(gradedColor(age));
+		const hexColor = rgbToHex(gradedColor(age));
 
-    if (plateId) {
-      try {
-        const finalRotation: Quaternion = findFinalRotation(
-          rotationNode,
-          rotationTimes,
-        );
+		if (plateId) {
+			try {
+				const finalRotation: Quaternion = findFinalRotation(
+					rotationNode,
+					rotationTimes,
+				);
 
-        return parsePoints(feature, hexColor, finalRotation);
-      } catch (e) {
-        console.log(e, feature.reconstructionPlateId);
-      }
-    }
-  };
+				return parsePoints(feature, hexColor, finalRotation);
+			} catch (e) {
+				console.log(e, feature.reconstructionPlateId);
+			}
+		}
+	};
 }
