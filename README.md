@@ -73,3 +73,13 @@ As of this version (0.0.1 super alpha)
 
 -----------
 I don't have a PC, so if anyone is willing to test this on a PC, I would appreciate the collaboration.
+
+
+------------
+
+## research
+
+https://alexewerlof.medium.com/node-shebang-e1d4b02f731d
+https://tsmx.net/commander-options/
+
+https://gist.github.com/dominikwilkowski/cba6c8c6b1ded8d3e3cc6bf0b7ddc432
