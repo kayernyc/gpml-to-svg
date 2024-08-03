@@ -2,16 +2,22 @@
   "bin": {
     "gpsvg": "./dist/gpsvg.js"
   },
+  "description": "convert gpml to svg from gplates",
+  "keywords": [
+    "GPlates",
+    "cli"
+  ],
+  "main": "dist/gpsvg.js",
   "name": "gpml-to-svg",
   "version": "0.0.1",
-  "description": "convert gpml to svg from gplates",
-  "main": "dist/gpsvg.js",
   "scripts": {
     "build": "tsc && tsc-alias",
     "lint": "eslint --config ./eslint.config.mjs",
     "test": "vitest --reporter=verbose"
   },
-  "author": "",
+  "author": "kathrin ayer",
+  "repository": "https://github.com/kayernyc/gpml-to-svg",
+  "homepage": "https://github.com/kayernyc/gpml-to-svg#readme",
   "license": "ISC",
   "dependencies": {
     "@inquirer/prompts": "^5.1.3",

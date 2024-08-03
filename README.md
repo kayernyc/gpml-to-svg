@@ -3,13 +3,10 @@
 
 Convert vectors in GPlates to vectors in SVGs.
 
-GPML-to-SVG is currently in `alpha`. It is very annoying to use, but you can get useful results if:
-
-- you know which files you want to convert
-- the shapes you are trying to convert are `SHAPES` according to GPlates and not lines or dots. _Continental Crust_ and _Ocean Crust_ are safe bets.
+GPML-to-SVG is currently in `alpha`. It is very annoying to use, but you can get useful results if the shapes you are trying to convert are `SHAPES` according to GPlates and not lines or dots. _Continental Crust_ and _Ocean Crust_ are safe bets.
 
 
-**To use:**
+**To use local version:**
 1. install Node v20.1.0 or higher: [How to install Node](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 2. clone GPML-to-SVG locally
 3. navigate into the GPML-to-SVG directory
