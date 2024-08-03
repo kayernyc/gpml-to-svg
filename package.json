@@ -1,11 +1,11 @@
 {
   "bin": {
-    "gpsvg": "./dist/index.js"
+    "gpsvg": "./dist/gpsvg.js"
   },
   "name": "gpml-to-svg",
   "version": "0.0.1",
   "description": "convert gpml to svg from gplates",
-  "main": "dist/index.js",
+  "main": "dist/gpsvg.js",
   "scripts": {
     "build": "tsc && tsc-alias",
     "lint": "eslint --config ./eslint.config.mjs",
@@ -29,6 +29,7 @@
     "@biomejs/biome": "1.8.3",
     "@eslint/js": "^8.0.0",
     "@types/node": "^20.12.12",
+    "cli-table3": "^0.6.5",
     "eslint": "^8.0.0",
     "globals": "^15.3.0",
     "prettier": "^3.2.5",

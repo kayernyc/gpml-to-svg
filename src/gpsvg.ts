@@ -2,7 +2,7 @@
 
 import { colorGradient } from '@commands/colorGradient';
 import { convert } from '@commands/convert';
-import { Command } from 'commander';
+import { Argument, Command, Help, Option } from 'commander';
 import {
   BORDER_COLOR_DECLARATION,
   BORDER_COLOR_DESCRIPTION,
@@ -22,18 +22,24 @@ import {
 } from 'constants/COMMANDER_CONSTANTS';
 
 import * as dotenv from 'dotenv';
+import { gpsvgHelp } from 'gpsvgHelp';
 dotenv.config({ path: `${__dirname}/../.env` });
 
 const program = new Command();
 
-program.enablePositionalOptions().option('-p, --progress');
-
 program
-  .version('0.0.1')
-  .description('A CLI for converting GPLates GPML files to SVGs.');
+  .configureHelp({
+    helpWidth: 40,
+    sortOptions: true,
+    subcommandTerm: (cmd) => cmd.name(),
+  })
+  .addHelpText('before', gpsvgHelp);
+
+program.version('0.0.2');
 
 program
   .command('convert')
+  .description('Convert one or more files to an SVG.')
   .requiredOption(TIME_DECLARATION, TIME_DESCRIPTION)
   .requiredOption(DESTINATION_DECLARATION, DESTINATION_DESCRIPTION)
   .option(FILL_COLOR_DECLARATION, FILL_COLOR_DESCRIPTION, FILL_COLOR_DEFAULT)
@@ -48,6 +54,9 @@ program
 
 program
   .command('color-gradient')
+  .description(
+    'Convert a single file to an SVG with a color ramp to indicate age.',
+  )
   .requiredOption(TIME_DECLARATION, TIME_DESCRIPTION)
   .requiredOption(DESTINATION_DECLARATION, DESTINATION_DESCRIPTION)
   .requiredOption(
@@ -63,7 +72,3 @@ program
   });
 
 program.parse(process.argv);
-
-if (!process.argv.slice(2).length) {
-  program.outputHelp();
-}

@@ -1,35 +1,38 @@
-import { stderr } from "node:process";
-import { convertRampedFileToGroup } from "@modules/colorGradient/convertRampedFileToGroup";
-import createSvg from "@modules/createSvg/createSvg";
-import { validColorRamp } from "@modules/validFiles/validColorRamp";
-import { colorValidation } from "@utilities/colorProcessing";
-import ansis from "ansis";
-import type { OptionValues } from "commander";
-import { validateRequiredFileProcessingOptions } from "middleware/validateRequiredFileProcessingOptions";
+import { stderr } from 'node:process';
+import { convertRampedFileToGroup } from '@modules/colorGradient/convertRampedFileToGroup';
+import createSvg from '@modules/createSvg/createSvg';
+import { validColorRamp } from '@modules/validFiles/validColorRamp';
+import { colorValidation } from '@utilities/colorProcessing';
+import ansis from 'ansis';
+import type { OptionValues } from 'commander';
+import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
 
 export async function colorGradient(options: OptionValues) {
-	const { destination, files, rotationTimes, userFileName } =
-		await validateRequiredFileProcessingOptions(options);
+  const { destination, files, rotationTimes, userFileName } =
+    await validateRequiredFileProcessingOptions(options);
 
-	const borderColor = colorValidation(options.borderColor);
-	const timeInt = Number.parseInt(options.time);
+  const borderColor = options.borderColor
+    ? colorValidation(options.borderColor)
+    : '';
 
-	const ramp = await validColorRamp(options.colorRamp);
-	if (!ramp) {
-		stderr.write(ansis.red("No valid cpt file found. Exiting."));
-		process.exit(2);
-	}
+  const timeInt = Number.parseInt(options.time);
 
-	const finalElements = await convertRampedFileToGroup(
-		files[0],
-		rotationTimes,
-		ramp,
-		timeInt,
-	);
+  const ramp = await validColorRamp(options.colorRamp);
+  if (!ramp) {
+    stderr.write(ansis.red('No valid cpt file found. Exiting.'));
+    process.exit(2);
+  }
 
-	if (finalElements === undefined) {
-		process.exit(1);
-	}
+  const finalElements = await convertRampedFileToGroup(
+    files[0],
+    rotationTimes,
+    ramp,
+    timeInt,
+  );
 
-	createSvg(finalElements, destination, userFileName, borderColor);
+  if (finalElements === undefined) {
+    process.exit(1);
+  }
+
+  createSvg(finalElements, destination, userFileName, borderColor);
 }
