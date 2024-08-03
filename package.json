@@ -1,15 +1,15 @@
 {
   "bin": {
-    "gpsvg": "./dist/gpsvg.js"
+    "gpsvg": "./dist/index.js"
   },
   "description": "convert gpml to svg from gplates",
   "keywords": [
     "GPlates",
     "cli"
   ],
-  "main": "dist/gpsvg.js",
-  "name": "gpml-to-svg",
-  "version": "0.0.1",
+  "main": "dist/index.js",
+  "name": "gpsvg",
+  "version": "0.0.2",
   "scripts": {
     "build": "tsc && tsc-alias",
     "lint": "eslint --config ./eslint.config.mjs",
