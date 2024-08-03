@@ -29,12 +29,12 @@ async function createSvg(
     .mkdir(destPath, { recursive: true })
     .then(() =>
       stderr.write(
-        ansis.green(`\nFile "${fileName}" written to '${destPath}'.\n`),
+        ansis.green(`\nFile "${finalFileName}" written to '${destPath}'.\n`),
       ),
     ) //console.log()
     .catch((err) => console.error(`Error creating directory: ${err.message}`));
   try {
-    fs.writeFile(`${destPath}/${fileName}`, content);
+    fs.writeFile(`${destPath}/${finalFileName}`, content);
   } catch (err: unknown) {
     errorProcessing(err);
   }

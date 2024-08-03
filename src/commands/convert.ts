@@ -17,7 +17,6 @@ const isFulfilled = <T>(
 ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 
 export async function convert(filepaths: string[], options: OptionValues) {
-  console.log({ options });
   const { destination, files, rotationTimes, userFileName } =
     await validateRequiredFileProcessingOptions(options, filepaths);
 
