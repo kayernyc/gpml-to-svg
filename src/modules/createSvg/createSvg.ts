@@ -31,7 +31,7 @@ async function createSvg(
       stderr.write(
         ansis.green(`\nFile "${finalFileName}" written to '${destPath}'.\n`),
       ),
-    ) //console.log()
+    )
     .catch((err) => console.error(`Error creating directory: ${err.message}`));
   try {
     fs.writeFile(`${destPath}/${finalFileName}`, content);

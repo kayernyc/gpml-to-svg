@@ -2,7 +2,7 @@
 
 import { colorGradient } from '@commands/colorGradient';
 import { convert } from '@commands/convert';
-import { Command } from 'commander';
+import { Argument, Command, Help, Option } from 'commander';
 import {
   BORDER_COLOR_DECLARATION,
   BORDER_COLOR_DESCRIPTION,
@@ -22,15 +22,20 @@ import {
 } from 'constants/COMMANDER_CONSTANTS';
 
 import * as dotenv from 'dotenv';
+import { gpsvgHelp } from 'gpsvgHelp';
 dotenv.config({ path: `${__dirname}/../.env` });
 
 const program = new Command();
 
-program.enablePositionalOptions().option('-p, --progress');
-
 program
-  .version('0.0.1')
-  .description('A CLI for converting GPLates GPML files to SVGs.');
+  .configureHelp({
+    helpWidth: 40,
+    sortOptions: true,
+    subcommandTerm: (cmd) => cmd.name(),
+  })
+  .addHelpText('before', gpsvgHelp);
+
+program.version('0.0.2');
 
 program
   .command('convert')
