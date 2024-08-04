@@ -55,15 +55,17 @@ export async function parseToJson(
       const newCollection: Array<GPlates_Feature> = [];
       for (const [key, gPFeature] of Object.entries(featureCollection)) {
         gPFeature.featureType = key;
-        gPFeature.processedTime = {
-          begin: timeToNumber(
-            gPFeature.validTime.TimePeriod.begin.TimeInstant.timePosition,
-          ),
-          end: timeToNumber(
-            gPFeature.validTime.TimePeriod.end.TimeInstant.timePosition,
-          ),
-        };
-        newCollection.push(gPFeature);
+        if (gPFeature.validTime) {
+          gPFeature.processedTime = {
+            begin: timeToNumber(
+              gPFeature.validTime.TimePeriod.begin.TimeInstant.timePosition,
+            ),
+            end: timeToNumber(
+              gPFeature.validTime.TimePeriod.end.TimeInstant.timePosition,
+            ),
+          };
+          newCollection.push(gPFeature);
+        }
       }
       return newCollection;
     });
