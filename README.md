@@ -1,17 +1,44 @@
-# GPML to SVG
-### A utility for GPLATES
+<p align="center">
+    <h1 align="center">GPML</h1>
+    <h3 align="center">Convert vectors in GPlates to vectors in SVGs from your terminal program.</h3>
+</p>
 
-Convert vectors in GPlates to vectors in SVGs.
+<table border="0">
+    <tr align="center">
+        <td>
+        Feature in GPlates<br/> at beginning of simulation
+        <img src="./documentationAssets/gplatesShot.png"></img>
+        </td>
+        <td>Feature in GPlates
+        <img src="./documentationAssets/testPlanet1000.png"></img>
+        </td>
+    </tr>
+    <tr align="center">
+      <td colspan=2><a href="./documentationAssets/testPlanet1000.svg">Link to svg</a></td>
+    </tr>
+      <tr align="center">
+        <td>
+        Feature in GPlates<br/> after transformations
+        <img src="./documentationAssets/gplatesShot700.png"></img>
+        </td>
+        <td>Feature in GPlates
+        <img src="./documentationAssets/testPlanet1000.png"></img>
+        </td>
+    </tr>
+    <tr align="center">
+      <td colspan=2><a href="./documentationAssets/testPlanet1000.svg">Link to svg</a></td>
+    </tr>
+</table>
 
-GPML-to-SVG is currently in `alpha`. It is very annoying to use, but you can get useful results if the shapes you are trying to convert are `SHAPES` according to GPlates and not lines or dots. _Continental Crust_ and _Ocean Crust_ are safe bets.
+GPML-to-SVG is currently in **alpha**. You can get useful results if the shapes you are trying to convert are `SHAPES` according to GPlates and not lines or dots. _Continental Crust_ and _Ocean Crust_ are safe bets.
 
+### System requirement
+- Node 20 or higher
 
-**To use local version:**
-1. install Node v20.1.0 or higher: [How to install Node](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
-2. clone GPML-to-SVG locally
-3. navigate into the GPML-to-SVG directory
-4. run `npm install`
-5. run `npm run build`
+Node is a javascript runtime that is compatible with the major operating systems. You do not need to know Node to use this command line tool.
+
+[How to install Node](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs) 
+
 
 
 To run the conversion, navigate to the project folder locally and run the `convert` command, 
@@ -36,7 +63,7 @@ Destination, time and a file to convert are required. If you're not passing in a
 
 `node dist/index.js convert -d <DESTINATION DIRECTORY> -c "<COLOR>" -t <TIME> <FULL PATH>`
 
-Please note: any path with spaces must be in quotes.
+Please note: any path with spaces **must be in quotes.**
 
 ### Example:
 FULL PATH: `/Users/imauser/folderName/Big\ continents:dinosaur\ friendly.gpml`
@@ -64,9 +91,16 @@ or combinations
 `node dist/index.js convert -c "008080" -t 900 -r /Users/imauser/folderName/shared.rot /Users/imauser/folderName /Users/imauser/folderName2/bigDino.gpml`
 
 ### Limitations
-As of this version (0.0.1 super alpha) 
+As of this version (0.0.3  alpha) 
 - only shapes and lines will get converted
 - every file gets converted to a `<g>` group, which can be selected as a group by Illustrator
+
+**To use local version:**
+1. install Node v20.1.0 or higher: [How to install Node](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
+2. clone GPML-to-SVG locally
+3. navigate into the GPML-to-SVG directory
+4. run `npm install`
+5. run `npm run build`
 
 -----------
 I don't have a PC, so if anyone is willing to test this on a PC, I would appreciate the collaboration.
