@@ -8,7 +8,7 @@ import type { OptionValues } from 'commander';
 import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
 
 export async function colorGradient(options: OptionValues) {
-  const { destination, files, rotationTimes, userFileName } =
+  const { destination, files, maxAge, rotationTimes, userFileName } =
     await validateRequiredFileProcessingOptions(options);
 
   const borderColor = options.borderColor
@@ -28,6 +28,7 @@ export async function colorGradient(options: OptionValues) {
     rotationTimes,
     ramp,
     timeInt,
+    maxAge,
   );
 
   if (finalElements === undefined) {
