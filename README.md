@@ -46,7 +46,7 @@ Node is a javascript runtime that is compatible with the major operating systems
 [How to install Node](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs) 
 
 
-## How to
+## How to:
 Install `gpsvg` globally:
 
 ```sh
@@ -74,7 +74,7 @@ Your terminal command should look something like this:
 gpsvg convert -t 900 -d /Users/imauser/testTheCode/ -c "008080" -fn kilroyWasHere "/Users/imauser/folder\ Name/Big\ continents:dinosaur\ friendly.gpml"
 ```
 
-<table cellpadding="1" bgcolor="#1a1a1a">
+<table>
 <tr>
   <td >
   <code>gpsvg</code>
@@ -96,7 +96,7 @@ gpsvg convert -t 900 -d /Users/imauser/testTheCode/ -c "008080" -fn kilroyWasHer
   <code>-t</code>
   </td>
   <td>
-    the point in time you want converted, in Ma <b>required</b><br/>
+    the point in time you want converted, in Ma <br /><b>required</b><br />
     It will check all features and only render those that exist at this moment in the simulation.
   </td>
 </tr>
@@ -105,7 +105,7 @@ gpsvg convert -t 900 -d /Users/imauser/testTheCode/ -c "008080" -fn kilroyWasHer
   <code>-d</code>
   </td>
   <td>
-    the destination folder or directory for the generated SVG <b>required</b><br/>
+    the destination folder or directory for the generated SVG <br /><b>required</b><br />
     Add a space and then put in your full file path. If your path name contains any spaces or special characters, be sure to wrap it in quotes.
   </td>
 </tr>
@@ -114,7 +114,7 @@ gpsvg convert -t 900 -d /Users/imauser/testTheCode/ -c "008080" -fn kilroyWasHer
   <code>-r</code>
   </td>
   <td>
-    the rotation file you wish to use <i>optional</i><br/>
+    the rotation file you wish to use <br/><i>optional</i><br/>
     The tool will attempt to find a rotation file near any of the files you pass in if you don't specify one to use.
   </td>
 </tr>
@@ -123,7 +123,16 @@ gpsvg convert -t 900 -d /Users/imauser/testTheCode/ -c "008080" -fn kilroyWasHer
   <code>-c</code>
   </td>
   <td>
-    the primary color for the output SVG. This can be a valid CSS color or a hex color. <br /><a href="https://www.w3schools.com/css/css_colors_hex.asp">W3C CSS colors</a>
+    the primary color for the output SVG. This can be a valid CSS color or a hex color. <br/><i>optional</i><br/><a href="https://www.w3schools.com/css/css_colors_hex.asp">W3C CSS colors</a><br />If you do not provide a color, everything will be rendered in gray.
+  </td>
+</tr>
+<tr>
+  <td >
+  <code>-mc</code>
+  </td>
+  <td>
+    this is a simple flag. Include it if you want different groups of features (per file) to be colored different shades of the main color. It does not take parameters.<br />
+    <code>gpsvg convert -c f00 -mc -r "/Users/imauser/...</code>
   </td>
 </tr>
 <tr>
@@ -131,7 +140,7 @@ gpsvg convert -t 900 -d /Users/imauser/testTheCode/ -c "008080" -fn kilroyWasHer
   <code>-fn</code>
   </td>
   <td>
-   is an optional parameter for the name of the output svg. If no name is provided, the CLI will ask for one during conversion
+   an optional parameter for the name of the output svg. <br/><i>optional</i><br/>If no name is provided, the CLI will ask for one during conversion
   </td>
 </tr>
 <tr>
@@ -139,7 +148,7 @@ gpsvg convert -t 900 -d /Users/imauser/testTheCode/ -c "008080" -fn kilroyWasHer
   <code>"/Users/imauser/folder\ Name/Big\ continents:dinosaur\ friendly.gpml"</code>
   </td>
   <td>
-    any files or a directory that you want to convert <b>required</b><br />
+    any files or a directory that you want to convert <br /><b>required</b><br />
     List your files with a space separating each complete path.
   </td>
 </tr>
