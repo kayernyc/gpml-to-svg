@@ -15,16 +15,20 @@ export async function convertFileToGroup(
   rotationTimes: RotationRecord,
   color: string,
   time: number,
+  maxAge: number,
 ): Promise<string | undefined> {
-  let featureArray: GPlates_Feature[] | undefined = await parseToJson(filepath);
+  let featureArray: GPlates_Feature[] | undefined = await parseToJson(
+    filepath,
+    maxAge,
+  );
 
   if (!featureArray) {
     throw new Error('No features found in file');
   }
+  const fileName = processedFileName(path.basename(filepath), false);
 
   // Finds all features that are valid at the given time
   featureArray = filterForTime(featureArray, time);
-  const fileName = processedFileName(path.basename(filepath), false);
 
   const parsePointsWithRotation = featureAndRotationFactory(rotationTimes);
 

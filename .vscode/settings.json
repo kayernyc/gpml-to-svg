@@ -6,6 +6,8 @@
     "gpsvg",
     "keyable",
     "merc",
-    "Orientable"
+    "Orientable",
+    "slerp",
+    "slerped"
   ]
 }
