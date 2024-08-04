@@ -10,15 +10,15 @@ export function stripGPML(data: string): string {
   return strippedData;
 }
 
-export function timeToNumber(value: string | number): number {
+export function timeToNumber(value: string | number, maxAge: number): number {
   if (typeof value === 'string') {
     if (value.includes('distantPast')) {
-      return Number.POSITIVE_INFINITY;
+      return maxAge;
     }
     if (value.includes('distantFuture')) {
       return 0;
     }
-
+    console.log(`Error time value: ${value}`);
     return Number.parseFloat(value);
   }
 
@@ -27,6 +27,7 @@ export function timeToNumber(value: string | number): number {
 
 export async function parseToJson(
   sourcePath: string,
+  maxAge: number,
 ): Promise<Array<GPlates_Feature> | undefined> {
   try {
     let data = await fs.readFile(sourcePath, 'utf8');
@@ -59,9 +60,11 @@ export async function parseToJson(
           gPFeature.processedTime = {
             begin: timeToNumber(
               gPFeature.validTime.TimePeriod.begin.TimeInstant.timePosition,
+              maxAge,
             ),
             end: timeToNumber(
               gPFeature.validTime.TimePeriod.end.TimeInstant.timePosition,
+              maxAge,
             ),
           };
           newCollection.push(gPFeature);

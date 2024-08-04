@@ -17,7 +17,7 @@ const isFulfilled = <T>(
 ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 
 export async function convert(filepaths: string[], options: OptionValues) {
-  const { destination, files, rotationTimes, userFileName } =
+  const { destination, files, maxAge, rotationTimes, userFileName } =
     await validateRequiredFileProcessingOptions(options, filepaths);
 
   const color = colorProcessing(options.color.toLowerCase());
@@ -46,7 +46,13 @@ export async function convert(filepaths: string[], options: OptionValues) {
       ];
       // convert rgb to hex
       const hexColor = rgbToHex(rgbColor);
-      return convertFileToGroup(filePath, rotationTimes, hexColor, timeInt);
+      return convertFileToGroup(
+        filePath,
+        rotationTimes,
+        hexColor,
+        timeInt,
+        maxAge,
+      );
     }),
   );
 

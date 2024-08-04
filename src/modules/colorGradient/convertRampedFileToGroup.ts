@@ -13,8 +13,12 @@ export async function convertRampedFileToGroup(
   rotationTimes: RotationRecord,
   colorRamp: CptRampRuleArray,
   time: number,
+  maxAge: number,
 ): Promise<string | undefined> {
-  let featureArray: GPlates_Feature[] | undefined = await parseToJson(filepath);
+  let featureArray: GPlates_Feature[] | undefined = await parseToJson(
+    filepath,
+    maxAge,
+  );
 
   if (!featureArray) {
     throw new Error('No features found in file');

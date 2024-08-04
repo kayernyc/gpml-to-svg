@@ -1,10 +1,7 @@
 import parsePoints from '@modules/createSvg/parsePoints';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
 import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import type {
-  FeatureCollection,
-  GPlates_Feature,
-} from '@projectTypes/timeTypes';
+import type { GPlates_Feature } from '@projectTypes/timeTypes';
 import type Quaternion from 'quaternion';
 
 export function featureAndRotationFactory(rotationTimes: RotationRecord) {
