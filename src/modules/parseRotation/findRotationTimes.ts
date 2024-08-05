@@ -7,7 +7,6 @@ import type {
   RotationNode,
   RotationRecord,
 } from '@projectTypes/rotationTypes';
-import Quaternion from 'quaternion';
 
 function findTimePair(plateObject: RotationRecord, time: number) {
   const times = Object.keys(plateObject).map((key) => Number.parseFloat(key));

@@ -4,10 +4,7 @@ import { parseToJson } from '@modules/findNodes/parseToJson';
 import path from 'node:path';
 import { featureAndRotationFactory } from '@modules/convert/featureAndRotationFactory';
 import type { RotationRecord } from '@projectTypes/rotationTypes';
-import type {
-  FeatureCollection,
-  GPlates_Feature,
-} from '@projectTypes/timeTypes';
+import type { GPlates_Feature } from '@projectTypes/timeTypes';
 import { processedFileName } from '@utilities/processedFileName';
 
 export async function convertFileToGroup(
