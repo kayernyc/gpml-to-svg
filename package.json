@@ -3,6 +3,14 @@
     "gpsvg": "./dist/index.js"
   },
   "description": "convert gpml to svg from gplates",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "documentationAssets",
+    "README.md"
+  ],
   "keywords": [
     "GPlates",
     "cli"

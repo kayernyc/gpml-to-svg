@@ -2,11 +2,7 @@ import parsePoints from '@modules/createSvg/parsePoints';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
 import type { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
 import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
-import type {
-  FeatureCollection,
-  GPlates_Feature,
-  TimeInstant,
-} from '@projectTypes/timeTypes';
+import type { GPlates_Feature, TimeInstant } from '@projectTypes/timeTypes';
 import { rgbToHex } from '@utilities/colorProcessing';
 import type Quaternion from 'quaternion';
 import { gradedStepFactory } from './gradedStepFactory';

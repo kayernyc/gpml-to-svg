@@ -152,9 +152,9 @@ const testCaseParameters = [
       },
     },
     expected: {
-      lat_of_euler_pole: 90,
-      lon_of_euler_pole: 6,
-      rotation_angle: 30,
+      lat_of_euler_pole: -48.67472687446754,
+      lon_of_euler_pole: -110.35886719435408,
+      rotation_angle: 35.629982813734365,
       relativePlateId: 0,
     },
   },

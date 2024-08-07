@@ -2,7 +2,7 @@
 
 import { colorGradient } from '@commands/colorGradient';
 import { convert } from '@commands/convert';
-import { Argument, Command, Help, Option } from 'commander';
+import { Command } from 'commander';
 import {
   BORDER_COLOR_DECLARATION,
   BORDER_COLOR_DESCRIPTION,
