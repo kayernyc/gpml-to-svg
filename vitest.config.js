@@ -1,7 +1,12 @@
+import { defineConfig } from 'vitest/config';
 import path from 'path';
 
-export default {
+export default defineConfig({
   test: {
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'html'],
+    },
     globals: true,
   },
   resolve: {
@@ -13,4 +18,4 @@ export default {
       '@utilities': path.resolve(__dirname, './src/utilities/'),
     },
   },
-};
+});
