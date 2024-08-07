@@ -35,7 +35,7 @@ program
   })
   .addHelpText('before', gpsvgHelp);
 
-program.version('0.0.2');
+program.version('0.0.4');
 
 program
   .command('convert')
