@@ -56,6 +56,12 @@ export async function parseToJson(
       const newCollection: Array<GPlates_Feature> = [];
       for (const [key, gPFeature] of Object.entries(featureCollection)) {
         gPFeature.featureType = key;
+        if (gPFeature?.outlineOf?.ConstantValue?.value) {
+          const shapeType =
+            Object.keys(gPFeature?.outlineOf?.ConstantValue?.value)[0] || '';
+          gPFeature.shapeType = shapeType;
+        }
+
         if (gPFeature.validTime) {
           gPFeature.processedTime = {
             begin: timeToNumber(
