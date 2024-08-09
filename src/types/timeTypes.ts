@@ -24,9 +24,28 @@ export type GPlates_Feature = {
       value: number;
     };
   };
-  // biome-ignore lint/complexity/noBannedTypes: <explanation>
-  outlineOf: {};
+  outlineOf: {
+    ConstantValue: {
+      value: string;
+    };
+  };
+  shapeType: string;
   featureType: string;
 };
+
+export function isGPlates_Feature(
+  candidate: object,
+): candidate is GPlates_Feature {
+  const testCandidate = candidate as GPlates_Feature;
+  if (
+    testCandidate.featureType !== undefined &&
+    testCandidate.validTime !== undefined &&
+    testCandidate.outlineOf !== undefined
+  ) {
+    return true;
+  }
+
+  return false;
+}
 
 export type FeatureCollection = Array<GPlates_Feature>;

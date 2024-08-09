@@ -2,9 +2,14 @@ import {
   cartesianToLatLong,
   latLonToCartesian,
 } from '@modules/applyRotation/transformCoordinates';
-import { type ShapeType, shapeTypes } from '@projectTypes/shapeTypes';
+import type { ShapeType } from '@projectTypes/shapeTypes';
+import {
+  type GPlates_Feature,
+  isGPlates_Feature,
+} from '@projectTypes/timeTypes';
 import errorProcessing from '@utilities/errorProcessing';
 import type Quaternion from 'quaternion';
+import { isFeatureValid } from './isFeatureValid';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
@@ -57,16 +62,6 @@ function shortDistanceCrosses360(
   const highPoint = Math.max(previousLong, sourceLong) + 360;
 
   return lowPoint + 360 - highPoint < highPoint - lowPoint;
-}
-
-function isFeatureValid(data: string): boolean | ShapeType {
-  let isValid: boolean | ShapeType = false;
-  for (const shapeType of shapeTypes) {
-    if (data.includes(shapeType)) {
-      isValid = shapeType as ShapeType;
-    }
-  }
-  return isValid;
 }
 
 function createPointsArray(
@@ -193,22 +188,26 @@ function parsePoints(
   finalRotation: Quaternion,
 ): string {
   try {
-    const data = JSON.stringify(outlineObject);
-    if (isFeatureValid(data) === false) {
+    if (!isGPlates_Feature(outlineObject as object)) {
+      throw new Error('Object is not a valid feature.');
+    }
+
+    const featureObject = outlineObject as GPlates_Feature;
+    const featureType: ShapeType | boolean = isFeatureValid(
+      featureObject.shapeType,
+    );
+
+    if (!featureType) {
       return '';
     }
 
     let metaData = '';
-
-    const featureObject = outlineObject as keyable;
-
     if (featureObject.name) {
       metaData = featureObject.name;
     }
 
-    const featureType: ShapeType = isFeatureValid(data) as ShapeType;
+    const data = JSON.stringify(outlineObject);
     const results = data.matchAll(CoordinatesRegex);
-
     if (!results) {
       return '';
     }
