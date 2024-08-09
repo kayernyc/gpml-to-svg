@@ -10,59 +10,13 @@ import {
 import errorProcessing from '@utilities/errorProcessing';
 import type Quaternion from 'quaternion';
 import { isFeatureValid } from './isFeatureValid';
+import { shortDistanceCrosses360 } from './shortDistanceCrosses360';
+import type { ProcessedPoint } from './createSvgTypes';
+import { crossingPoint } from './crossingPoint';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
 const scaleMultiplier = 10;
-
-type ProcessedPoint = {
-  lat: number;
-  long: number;
-};
-
-function crossingPoint(
-  previousPoint: ProcessedPoint,
-  currentPoint: ProcessedPoint,
-): number {
-  const { long: previousLong, lat: previousLat } = previousPoint;
-  const { long: currentLong, lat: currentLat } = currentPoint;
-
-  let x1: number;
-  let x2: number;
-
-  let y1: number;
-  let y2: number;
-
-  const baseY = Math.min(previousLat, currentLat);
-
-  if (previousLong > currentLong) {
-    x1 = previousLong;
-    x2 = currentLong + 360;
-    y1 = previousLat;
-    y2 = currentLat;
-  } else {
-    x1 = currentLong;
-    x2 = previousLong + 360;
-    y1 = currentLat;
-    y2 = previousLat;
-  }
-
-  if (y1 === y2) {
-    return y1;
-  }
-
-  return ((y2 - y1) / (x2 - x1)) * (360 - x1) + baseY;
-}
-
-function shortDistanceCrosses360(
-  previousLong: number,
-  sourceLong: number,
-): boolean {
-  const lowPoint = Math.min(previousLong, sourceLong) + 360;
-  const highPoint = Math.max(previousLong, sourceLong) + 360;
-
-  return lowPoint + 360 - highPoint < highPoint - lowPoint;
-}
 
 function createPointsArray(
   result: RegExpExecArray,
