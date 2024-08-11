@@ -5,9 +5,11 @@
     "gpml",
     "gpsvg",
     "keyable",
+    "memfs",
     "merc",
     "Orientable",
     "slerp",
-    "slerped"
+    "slerped",
+    "unionfs"
   ]
 }

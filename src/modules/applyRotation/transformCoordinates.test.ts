@@ -1,5 +1,5 @@
 import type Quaternion from 'quaternion';
-import { describe, expect, it, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 import {
   cartesianToLatLong,

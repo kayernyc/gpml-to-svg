@@ -38,7 +38,8 @@ export async function validateRequiredFileProcessingOptions(
   }
 
   const fileCandidates: string[] =
-    filepaths && filepaths?.length > 0 ? filepaths : [filePath];
+    filepaths && filepaths?.length > 0 ? filepaths : filePath ? [filePath] : [];
+
   if (fileCandidates.length === 0) {
     throw Error('No valid file names provided.');
   }
