@@ -19,6 +19,7 @@
     "strict": true,
     "target": "es2021"
   },
+  "exclude": ["src/**/*.test.ts"],
   "tsc-alias": {
     "verbose": false,
     "resolveFullPaths": true,

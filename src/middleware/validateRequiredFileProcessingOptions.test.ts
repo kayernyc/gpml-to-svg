@@ -48,6 +48,12 @@ describe('validateRequiredFileProcessingOptions', () => {
     }).rejects.toThrowError('No valid files found.');
   });
 
+  it('should throw an error if there are no valid files', () => {
+    expect(async () => {
+      await validateRequiredFileProcessingOptions({ destination: '/path/to' });
+    }).rejects.toThrowError('No valid file names provided.');
+  });
+
   it('should throw an error if there are no valid files', async () => {
     const result = await validateRequiredFileProcessingOptions(
       { destination: '/path/to', time: '700', fileName: 'bob' },
