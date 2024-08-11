@@ -56,10 +56,15 @@ export async function parseToJson(
       const newCollection: Array<GPlates_Feature> = [];
       for (const [key, gPFeature] of Object.entries(featureCollection)) {
         gPFeature.featureType = key;
-        if (gPFeature?.outlineOf?.ConstantValue?.value) {
-          const shapeType =
-            Object.keys(gPFeature?.outlineOf?.ConstantValue?.value)[0] || '';
+
+        const potentialShapeValue =
+          gPFeature?.outlineOf?.ConstantValue?.value ||
+          gPFeature?.centerLineOf?.ConstantValue?.value;
+
+        if (potentialShapeValue) {
+          const shapeType = Object.keys(potentialShapeValue)[0] || '';
           gPFeature.shapeType = shapeType;
+          gPFeature.shape = potentialShapeValue;
         }
 
         if (gPFeature.validTime) {

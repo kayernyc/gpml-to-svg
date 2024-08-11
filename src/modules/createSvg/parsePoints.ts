@@ -137,16 +137,17 @@ interface keyable {
 }
 
 function parsePoints(
-  outlineObject: unknown,
+  gpObject: unknown,
   color: string,
   finalRotation: Quaternion,
 ): string {
   try {
-    if (!isGPlates_Feature(outlineObject as object)) {
+    if (!isGPlates_Feature(gpObject as object)) {
+      // TODO better error messaging
       throw new Error('Object is not a valid feature.');
     }
 
-    const featureObject = outlineObject as GPlates_Feature;
+    const featureObject = gpObject as GPlates_Feature;
     const featureType: ShapeType | boolean = isFeatureValid(
       featureObject.shapeType,
     );
@@ -160,7 +161,7 @@ function parsePoints(
       metaData = featureObject.name;
     }
 
-    const data = JSON.stringify(outlineObject);
+    const data = JSON.stringify(gpObject);
     const results = data.matchAll(CoordinatesRegex);
     if (!results) {
       return '';

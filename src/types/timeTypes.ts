@@ -24,12 +24,18 @@ export type GPlates_Feature = {
       value: number;
     };
   };
-  outlineOf: {
+  outlineOf?: {
+    ConstantValue: {
+      value: string;
+    };
+  };
+  centerLineOf?: {
     ConstantValue: {
       value: string;
     };
   };
   shapeType: string;
+  shape: string;
   featureType: string;
 };
 
@@ -40,7 +46,7 @@ export function isGPlates_Feature(
   if (
     testCandidate.featureType !== undefined &&
     testCandidate.validTime !== undefined &&
-    testCandidate.outlineOf !== undefined
+    testCandidate.shape !== undefined
   ) {
     return true;
   }
