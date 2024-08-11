@@ -48,9 +48,11 @@
     "cli-table3": "^0.6.5",
     "eslint": "^8.0.0",
     "globals": "^15.3.0",
+    "memfs": "^4.11.1",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.10.0",
+    "unionfs": "^4.5.4",
     "vitest": "^2.0.0"
   }
 }
