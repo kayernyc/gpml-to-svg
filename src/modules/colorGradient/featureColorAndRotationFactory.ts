@@ -1,4 +1,4 @@
-import parsePoints from '@modules/createSvg/parsePoints';
+import parsePoints from '@modules/processPointData/parsePoints';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
 import type { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
 import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
