@@ -4,7 +4,6 @@ import { shortDistanceCrosses360 } from './shortDistanceCrosses360';
 
 export function implementCrossOver(
   currentPointArrays: ProcessedPoint[][],
-  longOffset = 0,
 ): ProcessedPoint[][] {
   const processedPointArrays: ProcessedPoint[][] = [];
 
@@ -16,8 +15,7 @@ export function implementCrossOver(
       let previousPoint: ProcessedPoint | undefined;
 
       for (let i = 0; i < currentPointArray.length; i++) {
-        let { long: sourceLong, lat: sourceLat } = currentPointArray[i];
-        sourceLong += longOffset;
+        const { long: sourceLong, lat: sourceLat } = currentPointArray[i];
 
         if (previousPoint) {
           const { long: previousLong } = previousPoint;

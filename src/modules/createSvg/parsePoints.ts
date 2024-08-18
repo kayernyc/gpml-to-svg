@@ -24,11 +24,12 @@ interface keyable {
 function createPointsArray(
   result: RegExpExecArray,
   finalRotation: Quaternion,
+  longOffset = 0,
 ): ProcessedPoint[][] {
   const coordinateData = result[1].trim().split(' ');
 
   // let previousPoint: ProcessedPoint | undefined;
-  const currentPath: ProcessedPoint[] = [];
+  let currentPath: ProcessedPoint[] = [];
 
   coordinateData.forEach((dataPoint, index) => {
     // only work with complete pairs
@@ -54,6 +55,13 @@ function createPointsArray(
         currentPath.push({ long: sourceLong, lat: sourceLat });
       }
     }
+  });
+
+  currentPath = currentPath.map(({ lat, long }) => {
+    return {
+      lat,
+      long: (long + longOffset) % 360,
+    };
   });
 
   return [currentPath];
@@ -140,9 +148,13 @@ function parsePoints(
     let currentStr = '';
 
     for (const result of results) {
-      let currentPointArrays = createPointsArray(result, finalRotation);
+      let currentPointArrays = createPointsArray(
+        result,
+        finalRotation,
+        longOffset,
+      );
       // create crossover
-      currentPointArrays = implementCrossOver(currentPointArrays, longOffset);
+      currentPointArrays = implementCrossOver(currentPointArrays);
       currentPointArrays = applyScale(currentPointArrays);
 
       if (featureType === 'LineString' || featureType === 'OrientableCurve') {
