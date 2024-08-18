@@ -42,5 +42,11 @@ export async function colorGradient(options: OptionValues) {
     process.exit(1);
   }
 
-  createSvg(finalElements, destination, userFileName, borderColor);
+  createSvg({
+    featureString: finalElements,
+    destPath: destination,
+    fileName: userFileName,
+    borderColor,
+    longOffset,
+  });
 }

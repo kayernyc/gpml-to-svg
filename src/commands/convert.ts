@@ -72,5 +72,11 @@ export async function convert(filepaths: string[], options: OptionValues) {
     )
     .join('\n');
 
-  createSvg(finalElements, destination, userFileName, borderColor);
+  createSvg({
+    featureString: finalElements,
+    destPath: destination,
+    fileName: userFileName,
+    borderColor,
+    longOffset,
+  });
 }
