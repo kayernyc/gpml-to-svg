@@ -29,6 +29,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
   const { multiColor } = options;
 
   const timeInt = Number.parseInt(options.time);
+  const longOffset = Number.parseFloat(options.longOffset) || 0;
 
   const colorMap: RgbColorArrayType[] = createColorArray(
     color,
@@ -52,6 +53,7 @@ export async function convert(filepaths: string[], options: OptionValues) {
         hexColor,
         timeInt,
         maxAge,
+        longOffset,
       );
     }),
   );

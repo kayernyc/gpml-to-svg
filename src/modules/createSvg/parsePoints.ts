@@ -10,13 +10,16 @@ import {
 import errorProcessing from '@utilities/errorProcessing';
 import type Quaternion from 'quaternion';
 import { isFeatureValid } from './isFeatureValid';
-import { shortDistanceCrosses360 } from './shortDistanceCrosses360';
 import type { ProcessedPoint } from './createSvgTypes';
-import { crossingPoint } from './crossingPoint';
+
+import { implementCrossOver } from './implementCrossOver';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
-const scaleMultiplier = 10;
+interface keyable {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  [key: string]: any;
+}
 
 function createPointsArray(
   result: RegExpExecArray,
@@ -24,9 +27,8 @@ function createPointsArray(
 ): ProcessedPoint[][] {
   const coordinateData = result[1].trim().split(' ');
 
-  let previousPoint: ProcessedPoint | undefined;
-  let mostRecentPath: ProcessedPoint[] = [];
-  let currentPath: ProcessedPoint[] = [];
+  // let previousPoint: ProcessedPoint | undefined;
+  const currentPath: ProcessedPoint[] = [];
 
   coordinateData.forEach((dataPoint, index) => {
     // only work with complete pairs
@@ -49,53 +51,12 @@ function createPointsArray(
         sourceLat = 90 - sourceLat;
         sourceLong = sourceLong + 180;
 
-        if (previousPoint) {
-          const { long: previousLong } = previousPoint;
-
-          if (shortDistanceCrosses360(previousLong, sourceLong)) {
-            const borderY = crossingPoint(previousPoint, {
-              lat: sourceLat,
-              long: sourceLong,
-            });
-
-            const previousBorderX = previousLong > 180 ? 360 : 0;
-            const currentBorderX = previousLong < 180 ? 360 : 0;
-
-            currentPath.push({ long: previousBorderX, lat: borderY });
-            const tempRecent = currentPath;
-            if (mostRecentPath) {
-              currentPath = mostRecentPath;
-            } else {
-              currentPath = [];
-            }
-
-            mostRecentPath = tempRecent;
-            currentPath.push({ long: currentBorderX, lat: borderY });
-            currentPath.push({ long: sourceLong, lat: sourceLat });
-          } else {
-            currentPath.push({ long: sourceLong, lat: sourceLat });
-          }
-        }
-
-        previousPoint = {
-          long: sourceLong,
-          lat: sourceLat,
-        };
-
-        currentPath.push(previousPoint);
+        currentPath.push({ long: sourceLong, lat: sourceLat });
       }
     }
   });
 
-  currentPath = currentPath.map(({ lat, long }) => {
-    return { lat: lat * scaleMultiplier, long: long * scaleMultiplier };
-  });
-
-  mostRecentPath = mostRecentPath.map(({ lat, long }) => {
-    return { lat: lat * scaleMultiplier, long: long * scaleMultiplier };
-  });
-
-  return mostRecentPath.length ? [currentPath, mostRecentPath] : [currentPath];
+  return [currentPath];
 }
 
 function createPoints(currentPointsArray: ProcessedPoint[], color: string) {
@@ -131,15 +92,23 @@ function createShape(
     )}" ${metaData ? `id="${metaData}"` : ''} style="fill:${color}" />`;
 }
 
-interface keyable {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  [key: string]: any;
+function applyScale(
+  currentPointArrays: ProcessedPoint[][],
+  scaleMultiplier = 10,
+): ProcessedPoint[][] {
+  return currentPointArrays.map((currentPointArray: ProcessedPoint[]) => {
+    return currentPointArray.map(({ lat, long }) => ({
+      lat: lat * scaleMultiplier,
+      long: long * scaleMultiplier,
+    }));
+  });
 }
 
 function parsePoints(
   gpObject: unknown,
   color: string,
   finalRotation: Quaternion,
+  longOffset = 0,
 ): string {
   try {
     if (!isGPlates_Feature(gpObject as object)) {
@@ -171,7 +140,10 @@ function parsePoints(
     let currentStr = '';
 
     for (const result of results) {
-      const currentPointArrays = createPointsArray(result, finalRotation);
+      let currentPointArrays = createPointsArray(result, finalRotation);
+      // create crossover
+      currentPointArrays = implementCrossOver(currentPointArrays, longOffset);
+      currentPointArrays = applyScale(currentPointArrays);
 
       if (featureType === 'LineString' || featureType === 'OrientableCurve') {
         for (const currentPointArray of currentPointArrays) {

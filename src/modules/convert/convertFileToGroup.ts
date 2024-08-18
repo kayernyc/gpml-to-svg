@@ -13,6 +13,7 @@ export async function convertFileToGroup(
   color: string,
   time: number,
   maxAge: number,
+  longOffset: number,
 ): Promise<string | undefined> {
   let featureArray: GPlates_Feature[] | undefined = await parseToJson(
     filepath,
@@ -27,7 +28,10 @@ export async function convertFileToGroup(
   // Finds all features that are valid at the given time
   featureArray = filterForTime(featureArray, time);
 
-  const parsePointsWithRotation = featureAndRotationFactory(rotationTimes);
+  const parsePointsWithRotation = featureAndRotationFactory(
+    rotationTimes,
+    longOffset,
+  );
 
   const svgFeatures = featureArray
     ?.map((feature) => parsePointsWithRotation(feature, color))
