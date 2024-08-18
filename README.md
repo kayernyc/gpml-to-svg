@@ -59,7 +59,7 @@ Once it's installed test the installation by running
 gpsvg --version
 ```
 
-If the cli has been successfully in stalled you should see something like:
+If the cli has been successfully installed you should see something like:
 
 ```sh
 gpsvg --version
