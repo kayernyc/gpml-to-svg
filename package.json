@@ -17,7 +17,7 @@
   ],
   "main": "dist/index.js",
   "name": "gpsvg",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "prebuild": "node scripts/env.js",
     "build": "tsc && tsc-alias",
