@@ -17,8 +17,14 @@ const isFulfilled = <T>(
 ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 
 export async function convert(filepaths: string[], options: OptionValues) {
-  const { destination, files, maxAge, rotationTimes, userFileName } =
-    await validateRequiredFileProcessingOptions(options, filepaths);
+  const {
+    destination,
+    files,
+    longOffset,
+    maxAge,
+    rotationTimes,
+    userFileName,
+  } = await validateRequiredFileProcessingOptions(options, filepaths);
 
   const color = colorProcessing(options.color.toLowerCase());
 
@@ -46,13 +52,14 @@ export async function convert(filepaths: string[], options: OptionValues) {
       ];
       // convert rgb to hex
       const hexColor = rgbToHex(rgbColor);
-      return convertFileToGroup(
-        filePath,
+      return convertFileToGroup({
+        filepath: filePath,
         rotationTimes,
-        hexColor,
-        timeInt,
+        color: hexColor,
+        time: timeInt,
         maxAge,
-      );
+        longOffset,
+      });
     }),
   );
 
@@ -65,5 +72,11 @@ export async function convert(filepaths: string[], options: OptionValues) {
     )
     .join('\n');
 
-  createSvg(finalElements, destination, userFileName, borderColor);
+  createSvg({
+    featureString: finalElements,
+    destPath: destination,
+    fileName: userFileName,
+    borderColor,
+    longOffset,
+  });
 }

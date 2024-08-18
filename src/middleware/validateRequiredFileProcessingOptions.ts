@@ -33,6 +33,8 @@ export async function validateRequiredFileProcessingOptions(
 ) {
   const { destination, filePath } = options;
 
+  const longOffset = Number.parseFloat(options.longOffset) % 360 || 0;
+
   if (!validDestination(destination)) {
     throw Error('No valid destination provided.');
   }
@@ -97,6 +99,7 @@ export async function validateRequiredFileProcessingOptions(
   return {
     destination,
     files,
+    longOffset,
     maxAge,
     rotationTimes,
     userFileName,

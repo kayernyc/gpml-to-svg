@@ -19,6 +19,7 @@
   "name": "gpsvg",
   "version": "0.0.5",
   "scripts": {
+    "prebuild": "node scripts/env.js",
     "build": "tsc && tsc-alias",
     "lint": "eslint --config ./eslint.config.mjs",
     "test": "vitest --reporter=verbose",
