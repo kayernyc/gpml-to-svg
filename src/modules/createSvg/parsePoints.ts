@@ -58,9 +58,10 @@ function createPointsArray(
   });
 
   currentPath = currentPath.map(({ lat, long }) => {
+    const newLong = long + longOffset + 360;
     return {
       lat,
-      long: (long + longOffset) % 360,
+      long: newLong % 360,
     };
   });
 
