@@ -66,10 +66,11 @@ program
     '-cr, --color-ramp <string>',
     'file for gradient or color ramp',
   )
+  .requiredOption('-f, --file-path <string>', 'file to color with a gradient')
+  .option(LONGITUDE_OFFSET_DECLARATION, LONGITUDE_OFFSET_DESCRIPTION)
   .option(ROTATION_FILE_DECLARATION, ROTATION_FILE_DESCRIPTION)
   .option(GENERATED_FILE_NAME_DECLARATION, GENERATED_FILE_NAME_DESCRIPTION)
   .option(BORDER_COLOR_DECLARATION, BORDER_COLOR_DESCRIPTION)
-  .option('-f, --file-path <string>', 'file to color with a gradient')
   .action(async (options) => {
     colorGradient(options);
   });

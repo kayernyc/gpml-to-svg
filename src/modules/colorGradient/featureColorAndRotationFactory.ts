@@ -20,6 +20,7 @@ export function featureColorAndRotationFactory(
   colorRamp: CptRampRuleArray,
   rotationTimes: RotationRecord,
   targetTime: number,
+  longOffset = 0,
 ) {
   const gradedColor = gradedStepFactory(colorRamp);
 
@@ -40,7 +41,7 @@ export function featureColorAndRotationFactory(
           rotationTimes,
         );
 
-        return parsePoints(feature, hexColor, finalRotation);
+        return parsePoints(feature, hexColor, finalRotation, longOffset);
       } catch (e) {
         console.log(e, feature.reconstructionPlateId);
       }

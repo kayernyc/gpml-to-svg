@@ -17,8 +17,14 @@ const isFulfilled = <T>(
 ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 
 export async function convert(filepaths: string[], options: OptionValues) {
-  const { destination, files, maxAge, rotationTimes, userFileName } =
-    await validateRequiredFileProcessingOptions(options, filepaths);
+  const {
+    destination,
+    files,
+    longOffset,
+    maxAge,
+    rotationTimes,
+    userFileName,
+  } = await validateRequiredFileProcessingOptions(options, filepaths);
 
   const color = colorProcessing(options.color.toLowerCase());
 
@@ -29,7 +35,6 @@ export async function convert(filepaths: string[], options: OptionValues) {
   const { multiColor } = options;
 
   const timeInt = Number.parseInt(options.time);
-  const longOffset = Number.parseFloat(options.longOffset) % 360 || 0;
 
   const colorMap: RgbColorArrayType[] = createColorArray(
     color,

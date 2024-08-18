@@ -13,6 +13,7 @@ export async function convertRampedFileToGroup(
   rotationTimes: RotationRecord,
   colorRamp: CptRampRuleArray,
   time: number,
+  longOffset: number,
   maxAge: number,
 ): Promise<string | undefined> {
   let featureArray: GPlates_Feature[] | undefined = await parseToJson(
@@ -32,6 +33,7 @@ export async function convertRampedFileToGroup(
     colorRamp,
     rotationTimes,
     time,
+    longOffset,
   );
 
   const svgFeatures = featureArray
