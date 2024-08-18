@@ -52,14 +52,14 @@ export async function convert(filepaths: string[], options: OptionValues) {
       ];
       // convert rgb to hex
       const hexColor = rgbToHex(rgbColor);
-      return convertFileToGroup(
-        filePath,
+      return convertFileToGroup({
+        filepath: filePath,
         rotationTimes,
-        hexColor,
-        timeInt,
+        color: hexColor,
+        time: timeInt,
         maxAge,
         longOffset,
-      );
+      });
     }),
   );
 

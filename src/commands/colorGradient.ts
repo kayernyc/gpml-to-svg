@@ -29,14 +29,14 @@ export async function colorGradient(options: OptionValues) {
     process.exit(2);
   }
 
-  const finalElements = await convertRampedFileToGroup(
-    files[0],
+  const finalElements = await convertRampedFileToGroup({
+    filepath: files[0],
     rotationTimes,
-    ramp,
-    timeInt,
+    colorRamp: ramp,
+    time: timeInt,
     longOffset,
     maxAge,
-  );
+  });
 
   if (finalElements === undefined) {
     process.exit(1);

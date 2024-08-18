@@ -7,14 +7,20 @@ import type { RotationRecord } from '@projectTypes/rotationTypes';
 import type { GPlates_Feature } from '@projectTypes/timeTypes';
 import { processedFileName } from '@utilities/processedFileName';
 
+export interface ConvertFileToGroupOptions {
+  color: string;
+  filepath: string;
+  longOffset: number;
+  maxAge: number;
+  rotationTimes: RotationRecord;
+  time: number;
+}
+
 export async function convertFileToGroup(
-  filepath: string,
-  rotationTimes: RotationRecord,
-  color: string,
-  time: number,
-  maxAge: number,
-  longOffset: number,
+  options: ConvertFileToGroupOptions,
 ): Promise<string | undefined> {
+  const { color, filepath, longOffset, maxAge, rotationTimes, time } = options;
+
   let featureArray: GPlates_Feature[] | undefined = await parseToJson(
     filepath,
     maxAge,

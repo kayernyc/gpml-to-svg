@@ -16,6 +16,13 @@ import { implementCrossOver } from './implementCrossOver';
 
 const CoordinatesRegex = /posList":"(?<coordinatelist>[0-9.\-\s]+)/gm;
 
+export interface ParsePointOptions {
+  gpObject: unknown;
+  color: string;
+  finalRotation: Quaternion;
+  longOffset: number;
+}
+
 interface keyable {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   [key: string]: any;
@@ -113,12 +120,8 @@ function applyScale(
   });
 }
 
-function parsePoints(
-  gpObject: unknown,
-  color: string,
-  finalRotation: Quaternion,
-  longOffset = 0,
-): string {
+function parsePoints(options: ParsePointOptions): string {
+  const { gpObject, color, finalRotation, longOffset = 0 } = options;
   try {
     if (!isGPlates_Feature(gpObject as object)) {
       // TODO better error messaging

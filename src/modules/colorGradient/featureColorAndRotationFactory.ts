@@ -41,7 +41,12 @@ export function featureColorAndRotationFactory(
           rotationTimes,
         );
 
-        return parsePoints(feature, hexColor, finalRotation, longOffset);
+        return parsePoints({
+          gpObject: feature,
+          color: hexColor,
+          finalRotation,
+          longOffset,
+        });
       } catch (e) {
         console.log(e, feature.reconstructionPlateId);
       }
