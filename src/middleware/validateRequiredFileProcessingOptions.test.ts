@@ -63,6 +63,7 @@ describe('validateRequiredFileProcessingOptions', () => {
     expect(result).toEqual({
       destination: '/path/to',
       files: ['/path/to/file.gpml'],
+      longOffset: 0,
       maxAge: 0,
       rotationTimes: {},
       userFileName: 'bob.svg',
