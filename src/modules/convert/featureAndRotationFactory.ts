@@ -1,5 +1,5 @@
-import parsePoints from '@modules/processPointData/parsePoints';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
+import parsePoints from '@modules/processPointData/parsePoints';
 import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
 import type { GPlates_Feature } from '@projectTypes/timeTypes';
 import type Quaternion from 'quaternion';

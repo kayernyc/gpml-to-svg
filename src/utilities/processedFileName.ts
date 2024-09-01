@@ -1,17 +1,17 @@
-import path from "node:path";
+import path from 'node:path';
 
 export function processedFileName(url: string, extension = true) {
-	let nameSource = path.basename(url);
+  let nameSource = path.basename(url);
 
-	// get everything before the last period
-	const indexOfLastPeriod = nameSource.lastIndexOf(".");
+  // get everything before the last period
+  const indexOfLastPeriod = nameSource.lastIndexOf('.');
 
-	if (indexOfLastPeriod > -1) {
-		nameSource = nameSource.slice(0, indexOfLastPeriod);
-	}
+  if (indexOfLastPeriod > -1) {
+    nameSource = nameSource.slice(0, indexOfLastPeriod);
+  }
 
-	if (!nameSource) return undefined;
+  if (!nameSource) return undefined;
 
-	nameSource = nameSource.replaceAll(" ", "-");
-	return extension ? `${nameSource}.svg` : nameSource;
+  nameSource = nameSource.replaceAll(' ', '-');
+  return extension ? `${nameSource}.svg` : nameSource;
 }

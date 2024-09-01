@@ -2,17 +2,17 @@ export default [
   {
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: "module",
+      sourceType: 'module',
       globals: {},
     },
-    ignores: ["dist/*"],
+    ignores: ['dist/*'],
     linterOptions: {
       noInlineConfig: true,
-      reportUnusedDisableDirectives: "warn",
+      reportUnusedDisableDirectives: 'warn',
     },
     rules: {
-      semi: "error",
-      "prefer-const": "error",
+      semi: 'error',
+      'prefer-const': 'error',
     },
   },
 ];

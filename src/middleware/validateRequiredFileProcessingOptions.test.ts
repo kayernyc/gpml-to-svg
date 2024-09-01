@@ -1,7 +1,7 @@
-import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
-import { vol } from 'memfs';
 import * as fs from 'node:fs';
+import { vol } from 'memfs';
 import { ufs } from 'unionfs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const mockRot = './mock.rot';
 import { validateRequiredFileProcessingOptions } from './validateRequiredFileProcessingOptions';
 
@@ -63,6 +63,7 @@ describe('validateRequiredFileProcessingOptions', () => {
     expect(result).toEqual({
       destination: '/path/to',
       files: ['/path/to/file.gpml'],
+      longOffset: 0,
       maxAge: 0,
       rotationTimes: {},
       userFileName: 'bob.svg',
