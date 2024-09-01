@@ -19,11 +19,11 @@
   "name": "gpsvg",
   "version": "0.0.6",
   "scripts": {
-    "prebuild": "node scripts/env.js",
     "build": "tsc && tsc-alias",
-    "lint": "eslint --config ./eslint.config.mjs",
-    "test": "vitest --reporter=verbose",
-    "coverage": "vitest run --coverage && rm -rf ./coverage/tmp"
+    "check": "npx @biomejs/biome check --write",
+    "coverage": "vitest run --coverage && rm -rf ./coverage/tmp",
+    "prebuild": "node scripts/env.js",
+    "test": "vitest --reporter=verbose"
   },
   "author": "kathrin ayer",
   "repository": "https://github.com/kayernyc/gpml-to-svg",

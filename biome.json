@@ -1,24 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
+  "files": { "ignore": ["**/*.min.js", ".vscode"], "include": ["src/"] },
+  "formatter": { "indentStyle": "space" },
+  "organizeImports": { "enabled": true },
   "linter": {
     "enabled": true,
-    "rules": {
-      "recommended": true
-    }
+    "rules": { "recommended": false, "style": { "useConst": "error" } },
+    "ignore": ["dist/*"]
   },
-  "files": {
-    "include": ["src/"],
-    "ignore": ["**/*.min.js", ".vscode"]
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "single"
-    }
-  },
-  "formatter": {
-    "indentStyle": "space"
-  }
+  "javascript": { "formatter": { "quoteStyle": "single" }, "globals": [] }
 }
