@@ -6,9 +6,9 @@ import { parseRotationFile } from '@modules/parseRotation/parseRotationFile';
 import { validDestination } from '@modules/validDestination/validDestination';
 import { findValidFiles } from '@modules/validFiles/findValidFiles';
 import { findValidRotationFile } from '@modules/validFiles/findValidRotationFile';
+import type { RotationNode } from '@projectTypes/rotationTypes';
 import { processedFileName } from '@utilities/processedFileName';
 import type { OptionValues } from 'commander';
-import type { RotationNode } from '@projectTypes/rotationTypes';
 
 type RotationTimesDictionary = {
   [key: number]: { [key: string]: RotationNode };

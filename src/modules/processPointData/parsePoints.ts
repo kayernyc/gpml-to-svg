@@ -9,8 +9,8 @@ import {
 } from '@projectTypes/timeTypes';
 import errorProcessing from '@utilities/errorProcessing';
 import type Quaternion from 'quaternion';
-import { isFeatureValid } from './isFeatureValid';
 import type { ProcessedPoint } from './createSvgTypes';
+import { isFeatureValid } from './isFeatureValid';
 
 import { implementCrossOver } from './implementCrossOver';
 

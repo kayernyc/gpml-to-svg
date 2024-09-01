@@ -1,8 +1,8 @@
 import { promises as fs } from 'node:fs';
 import { stderr } from 'node:process';
+import { VERSION } from '@constants/BUILD';
 import errorProcessing from '@utilities/errorProcessing';
 import ansis from 'ansis';
-import { VERSION } from '@constants/BUILD';
 
 const svgWidth = 3600;
 const svgHeight = 1800;

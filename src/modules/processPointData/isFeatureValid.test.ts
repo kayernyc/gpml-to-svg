@@ -1,5 +1,5 @@
-import { describe, it, expect, test } from 'vitest';
 import { shapeTypes } from '@projectTypes/shapeTypes';
+import { describe, expect, it, test } from 'vitest';
 import { isFeatureValid } from './isFeatureValid';
 
 describe('isFeatureValid', () => {

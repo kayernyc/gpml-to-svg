@@ -1,9 +1,9 @@
 import { readdirSync } from 'node:fs';
 import path from 'node:path';
+import { GPLATES_GPML_FILE_EXT } from '@constants/GPLATES_CONSTANTS';
 import { isDirectory } from '@utilities/isDirectory';
 import { isFile } from '@utilities/isFile';
 import { processedFileName } from '@utilities/processedFileName';
-import { GPLATES_GPML_FILE_EXT } from '@constants/GPLATES_CONSTANTS';
 
 export interface ValidFilesDictionary {
   files: string[];

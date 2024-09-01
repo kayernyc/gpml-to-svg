@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { shortDistanceCrosses360 } from './shortDistanceCrosses360';
 
 describe('shortDistanceCrosses360', () => {
