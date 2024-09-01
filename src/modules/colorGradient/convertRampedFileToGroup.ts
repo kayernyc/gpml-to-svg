@@ -8,13 +8,20 @@ import type { GPlates_Feature } from '@projectTypes/timeTypes';
 import { processedFileName } from '@utilities/processedFileName';
 import { featureColorAndRotationFactory } from './featureColorAndRotationFactory';
 
+export interface ConvertRampedFileToGroupOptions {
+  colorRamp: CptRampRuleArray;
+  filepath: string;
+  longOffset: number;
+  maxAge: number;
+  rotationTimes: RotationRecord;
+  time: number;
+}
+
 export async function convertRampedFileToGroup(
-  filepath: string,
-  rotationTimes: RotationRecord,
-  colorRamp: CptRampRuleArray,
-  time: number,
-  maxAge: number,
+  options: ConvertRampedFileToGroupOptions,
 ): Promise<string | undefined> {
+  const { colorRamp, filepath, longOffset, maxAge, rotationTimes, time } =
+    options;
   let featureArray: GPlates_Feature[] | undefined = await parseToJson(
     filepath,
     maxAge,
@@ -32,6 +39,7 @@ export async function convertRampedFileToGroup(
     colorRamp,
     rotationTimes,
     time,
+    longOffset,
   );
 
   const svgFeatures = featureArray

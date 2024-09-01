@@ -8,8 +8,14 @@ import type { OptionValues } from 'commander';
 import { validateRequiredFileProcessingOptions } from 'middleware/validateRequiredFileProcessingOptions';
 
 export async function colorGradient(options: OptionValues) {
-  const { destination, files, maxAge, rotationTimes, userFileName } =
-    await validateRequiredFileProcessingOptions(options);
+  const {
+    destination,
+    files,
+    longOffset,
+    maxAge,
+    rotationTimes,
+    userFileName,
+  } = await validateRequiredFileProcessingOptions(options);
 
   const borderColor = options.borderColor
     ? colorValidation(options.borderColor)
@@ -23,17 +29,24 @@ export async function colorGradient(options: OptionValues) {
     process.exit(2);
   }
 
-  const finalElements = await convertRampedFileToGroup(
-    files[0],
+  const finalElements = await convertRampedFileToGroup({
+    filepath: files[0],
     rotationTimes,
-    ramp,
-    timeInt,
+    colorRamp: ramp,
+    time: timeInt,
+    longOffset,
     maxAge,
-  );
+  });
 
   if (finalElements === undefined) {
     process.exit(1);
   }
 
-  createSvg(finalElements, destination, userFileName, borderColor);
+  createSvg({
+    featureString: finalElements,
+    destPath: destination,
+    fileName: userFileName,
+    borderColor,
+    longOffset,
+  });
 }

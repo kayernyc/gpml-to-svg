@@ -14,25 +14,25 @@ ShapeTypes
 */
 
 export const shapeTypes = [
-	"LineString",
-	"MultiPoint",
-	"OrientableCurve",
-	"Point",
-	"Polygon",
+  'LineString',
+  'MultiPoint',
+  'OrientableCurve',
+  'Point',
+  'Polygon',
 ] as const;
 
 export type ShapeType = (typeof shapeTypes)[number];
 
 export type LinearRing = {
-	posList: string;
+  posList: string;
 };
 
 export type Polygon = {
-	exterior: LinearRing;
+  exterior: LinearRing;
 };
 
 export type Shape = {
-	value: ShapeType;
-	description: string;
-	valueType: string;
+  value: ShapeType;
+  description: string;
+  valueType: string;
 };

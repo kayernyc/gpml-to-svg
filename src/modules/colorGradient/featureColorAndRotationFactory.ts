@@ -1,5 +1,5 @@
-import parsePoints from '@modules/createSvg/parsePoints';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
+import parsePoints from '@modules/processPointData/parsePoints';
 import type { CptRampRuleArray } from '@modules/validFiles/jsonFromCpt';
 import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
 import type { GPlates_Feature, TimeInstant } from '@projectTypes/timeTypes';
@@ -20,6 +20,7 @@ export function featureColorAndRotationFactory(
   colorRamp: CptRampRuleArray,
   rotationTimes: RotationRecord,
   targetTime: number,
+  longOffset = 0,
 ) {
   const gradedColor = gradedStepFactory(colorRamp);
 
@@ -40,7 +41,12 @@ export function featureColorAndRotationFactory(
           rotationTimes,
         );
 
-        return parsePoints(feature, hexColor, finalRotation);
+        return parsePoints({
+          gpObject: feature,
+          color: hexColor,
+          finalRotation,
+          longOffset,
+        });
       } catch (e) {
         console.log(e, feature.reconstructionPlateId);
       }

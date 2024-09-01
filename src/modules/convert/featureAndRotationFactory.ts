@@ -1,10 +1,13 @@
-import parsePoints from '@modules/createSvg/parsePoints';
 import { findFinalRotation } from '@modules/findFinalRotation/findFinalRotation';
+import parsePoints from '@modules/processPointData/parsePoints';
 import type { RotationNode, RotationRecord } from '@projectTypes/rotationTypes';
 import type { GPlates_Feature } from '@projectTypes/timeTypes';
 import type Quaternion from 'quaternion';
 
-export function featureAndRotationFactory(rotationTimes: RotationRecord) {
+export function featureAndRotationFactory(
+  rotationTimes: RotationRecord,
+  longOffset = 0,
+) {
   return (feature: GPlates_Feature, color: string) => {
     const plateId = feature.reconstructionPlateId?.ConstantValue?.value;
     const rotationNode: RotationNode = rotationTimes[plateId] as RotationNode;
@@ -16,7 +19,12 @@ export function featureAndRotationFactory(rotationTimes: RotationRecord) {
           rotationTimes,
         );
 
-        return parsePoints(feature, color, finalRotation);
+        return parsePoints({
+          gpObject: feature,
+          color,
+          finalRotation,
+          longOffset,
+        });
       } catch (e) {
         console.log(e, feature.reconstructionPlateId);
       }
