@@ -14,7 +14,7 @@ function validCR(filePath: string) {
     process.exit(1);
   }
 
-  stdout.write(`Using ${filePath} as the color ramp.`);
+  stdout.write(`Using ${filePath} as the color ramp.\n`);
 
   // process cpt and extract values
   return jsonFromCpt(filePath);

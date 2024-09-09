@@ -49,7 +49,8 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
       currentNumStr += currentChar;
     }
 
-    if (currentNumStr.length > 3) {
+    if (currentNumStr.length > 3 && numberArray.length % 4 !== 0) {
+      stderr.write(ansis.red.bold(`Invalid color number ${currentNumStr}`));
       process.exit(2);
     }
 
@@ -90,11 +91,13 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
 
 export async function jsonFromCpt(filePath: string) {
   const data = await fs.readFile(filePath, 'utf8');
-  return data
+  console.log('BOB', { data });
+  const resultData = data
     .split('\n')
     .map((line) => line.trim())
     .filter((line) => !line.includes('#'))
     .reduce((acc, line) => {
+      console.log({ line, acc });
       switch (line.charAt(0)) {
         case 'B':
         case 'F':
@@ -107,4 +110,7 @@ export async function jsonFromCpt(filePath: string) {
           return [...acc, ...findRgbColorCodeRule(line)];
       }
     }, [] as CptRampRuleArray);
+
+  console.log('BOB', { resultData });
+  return resultData;
 }
