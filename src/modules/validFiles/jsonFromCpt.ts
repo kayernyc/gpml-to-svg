@@ -91,13 +91,11 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
 
 export async function jsonFromCpt(filePath: string) {
   const data = await fs.readFile(filePath, 'utf8');
-  console.log('BOB', { data });
   const resultData = data
     .split('\n')
     .map((line) => line.trim())
     .filter((line) => !line.includes('#'))
     .reduce((acc, line) => {
-      console.log({ line, acc });
       switch (line.charAt(0)) {
         case 'B':
         case 'F':
@@ -111,6 +109,5 @@ export async function jsonFromCpt(filePath: string) {
       }
     }, [] as CptRampRuleArray);
 
-  console.log('BOB', { resultData });
   return resultData;
 }

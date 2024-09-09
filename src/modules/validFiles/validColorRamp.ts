@@ -39,7 +39,6 @@ export async function validColorRamp(filePath: string) {
   }
 
   if (isDirectory(filePath)) {
-    console.log('DIR');
     const { cpt } = findFileTypeInDirectory(filePath, ['cpt']);
     if (cpt.length === 0) {
       console.warn('No valid color ramp provided');
