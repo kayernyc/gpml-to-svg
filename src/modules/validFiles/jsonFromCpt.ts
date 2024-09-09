@@ -49,7 +49,8 @@ export function findRgbColorCodeRule(line: string): CptRampRuleArray {
       currentNumStr += currentChar;
     }
 
-    if (currentNumStr.length > 3) {
+    if (currentNumStr.length > 3 && numberArray.length % 4 !== 0) {
+      stderr.write(ansis.red.bold(`Invalid color number ${currentNumStr}`));
       process.exit(2);
     }
 

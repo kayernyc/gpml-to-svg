@@ -14,7 +14,7 @@ function validCR(filePath: string) {
     process.exit(1);
   }
 
-  stdout.write(`Using ${filePath} as the color ramp.`);
+  stdout.write(`Using ${filePath} as the color ramp.\n`);
 
   // process cpt and extract values
   return jsonFromCpt(filePath);
@@ -39,7 +39,6 @@ export async function validColorRamp(filePath: string) {
   }
 
   if (isDirectory(filePath)) {
-    console.log('DIR');
     const { cpt } = findFileTypeInDirectory(filePath, ['cpt']);
     if (cpt.length === 0) {
       console.warn('No valid color ramp provided');
