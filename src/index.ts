@@ -23,6 +23,8 @@ import {
   TIME_DESCRIPTION,
 } from 'constants/COMMANDER_CONSTANTS';
 
+import { VERSION } from '@constants/BUILD';
+
 import * as dotenv from 'dotenv';
 import { gpsvgHelp } from 'gpsvgHelp';
 dotenv.config({ path: `${__dirname}/../.env` });
@@ -37,7 +39,7 @@ program
   })
   .addHelpText('before', gpsvgHelp);
 
-program.version('0.0.4');
+program.version(VERSION);
 
 program
   .command('convert')
