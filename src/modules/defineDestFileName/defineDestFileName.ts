@@ -68,6 +68,10 @@ async function awaitFileName(candidateNames: string[]) {
   }
 }
 
+export function testFunction() {
+  process.stdout.write('this is a test');
+}
+
 export async function defineDestFileName(
   candidateNames: string[],
 ): Promise<string> {

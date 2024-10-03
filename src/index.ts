@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#! /usr/bin/env ts-node
 
 import { colorGradient } from '@commands/colorGradient';
 import { convert } from '@commands/convert';
